@@ -14,12 +14,15 @@ class IpCreate(Ip):
     pass
 
 class User(BaseModel):
-    is_active: bool
+    is_active: Optional[bool] = True
     ips: list[Ip] = []
     email: EmailStr
-    is_admin: bool = False
+    is_admin: Optional[bool] = False
     class Config:
         orm_mode = True
 
 class UserCreate(User):
-        password: str
+    password: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None

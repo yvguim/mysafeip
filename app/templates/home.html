@@ -1,0 +1,45 @@
+{%extends "layout.html" %}
+
+{% block content %}
+<script>
+    $(document).ready(function() {
+      $("#about").click(function() {
+        $('.ui.modal').modal('show');
+      });
+      $("#close").click(function() {
+        $('.ui.modal').modal('hide');
+      });
+    });
+</script>
+
+{% if user.email %}
+Hello dear <b>{{ user.email }}</b>, <br>
+{% if user.is_admin %}
+You are an admin, <br>
+{% endif %}
+You come from  <b>{{ client_host}}</b> today.
+
+{% else %}
+Hello dear <b>{{ client_host}}</b>, <br>
+<div class="content">You are not authenticated. Consider signin or login ;)</div>
+{% endif %}
+
+<button id="about" class="ui button primary">About Mysafeip</button>
+<div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      About Mysafeip
+    </div>
+    <div class="content">
+        Mysafeip bla bla bla bla bla blabla bla blabla bla blabla bla blabla bla 
+        blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla 
+        bla blabla bla blabla bla blabla bla blabla bla blabla bla bla
+    </div>
+    <div class="actions">
+      <div id="close" class="ui positive right labeled icon button">
+        Close
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

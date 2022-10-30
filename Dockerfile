@@ -4,7 +4,6 @@ LABEL maintainer="Yves Guimard <yves.guimard@gmail.com>"
 
 COPY requirements.txt /tmp/requirements.txt
 
-#Run apt update -y && apt install -y python3-pip apt-utils
 Run pip install --upgrade pip
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 

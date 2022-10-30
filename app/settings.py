@@ -9,7 +9,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
-    API_V1_STR: str = "/api/v1"
+    #Todo: add it in env var
     JWT_SECRET: str = "TEST_SECRET_DO_NOT_USE_IN_PROD"
     ALGORITHM: str = "HS256"
 

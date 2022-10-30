@@ -1,21 +1,51 @@
-from typing import Optional, MutableMapping, List, Union
+from typing import Optional, Dict
 from datetime import datetime, timedelta
-
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm.session import Session
 from jose import jwt, JWTError
-
 from models import User
+from schemas import TokenData
 from settings import settings
 from security import verify_password
-from pydantic import BaseModel
+from fastapi.security import OAuth2
+from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
+from fastapi import Request, HTTPException, status, Depends
+from fastapi.security.utils import get_authorization_scheme_param
+from database import get_db
 
+# Redefine OAuth2PasswordBearer to add cookie support (for browser)
+class OAuth2PasswordBearerWithCookie(OAuth2):
+    def __init__(
+        self,
+        tokenUrl: str,
+        scheme_name: Optional[str] = None,
+        scopes: Optional[Dict[str, str]] = None,
+        auto_error: bool = True,
+    ):
+        if not scopes:
+            scopes = {}
+        flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
+        super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
-JWTPayloadMapping = MutableMapping[
-    str, Union[datetime, bool, str, List[str], List[int]]
-]
+    async def __call__(self, request: Request) -> Optional[str]:
+        #If client got an access_token cookie, try to use it  as authentication
+        if request.cookies.get("access_token"):
+            authorization: str = request.cookies.get("access_token")
+        else:
+            authorization: str = request.headers.get("Authorization") 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
+        scheme, param = get_authorization_scheme_param(authorization)
+        if not authorization or scheme.lower() != "bearer":
+            if self.auto_error:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            else:
+                return None
+        return param
+
+oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl=f"/signin")
 
 
 def authenticate(
@@ -54,3 +84,36 @@ def _create_token(
 
     return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.ALGORITHM)
 
+async def get_current_user(
+    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(
+            token.replace('Bearer ', ''),
+            settings.JWT_SECRET,
+            algorithms=[settings.ALGORITHM],
+            options={"verify_aud": False},
+        )
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+
+    user = db.query(User).filter(User.id == token_data.username).first()
+    if user is None:
+        raise credentials_exception
+    return user
+
+async def check_user(request: Request, db):
+    token = request.cookies.get("access_token")
+    current_user = ""
+    if token:
+        current_user: models.User = await get_current_user(token=token, db=db)
+    return current_user
