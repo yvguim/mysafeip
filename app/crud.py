@@ -16,8 +16,6 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_user(db: Session, user: UserCreate):
-    print(user.email)
-    print(user.password)
     db_user = User(email=user.email, is_admin=user.is_admin, hashed_password=security.get_password_hash(user.password))
     db.add(db_user)
     db.commit()
