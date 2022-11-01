@@ -20,4 +20,5 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint ./app
+        cd app/
+        find . -type f -name "*.py" | grep -v alembic | xargs pylint
