@@ -36,22 +36,23 @@ async def main(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("home.html", {"request": request, "client_host": client_host, "user": user})
 
 @app.get("/signin")
-async def main(request: Request):
-   return templates.TemplateResponse("signin.html", {"request": request})
+async def signin(request: Request, db: Session = Depends(get_db)):
+    user = await check_user(request, db)
+    return templates.TemplateResponse("signin.html", {"request": request, "user": user})
 
 @app.post("/signin")
 def login(response: Response,request: Request, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends() ):
     """
     Get the JWT for a user with data from OAuth2 request form body.
     """
-    response = templates.TemplateResponse("signin.html", {"request": request})
-    user = authenticate(email=form_data.username, password=form_data.password, db=db)  # 2
+    user = authenticate(email=form_data.username, password=form_data.password, db=db)
+    response = templates.TemplateResponse("signin.html", {"request": request, "user": user})
+
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")  # 3
     access_token = create_access_token(sub=user.id)
     response.set_cookie(
-        key="access_token", value="{}".format(encoders.jsonable_encoder(access_token)), httponly=True
-        #key="access_token", value="Bearer {}".format(encoders.jsonable_encoder(access_token)), httponly=True
+    key="access_token", value="Bearer {}".format(encoders.jsonable_encoder(access_token)), httponly=True
 
     )
     for scope in form_data.scopes:
@@ -68,8 +69,9 @@ def logout(response : Response):
   return response
 
 @app.get("/register")
-async def main(request: Request):
-   return templates.TemplateResponse("register.html", {"request": request})
+async def main(request: Request, db: Session = Depends(get_db)):
+    user = await check_user(request, db)
+    return templates.TemplateResponse("register.html", {"request": request, "user": user})
 
 @app.post("/register")
 def create_user(email: str = Form(), password: str = Form(), db: Session = Depends(get_db)):
