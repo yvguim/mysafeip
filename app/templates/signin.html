@@ -2,30 +2,42 @@
 
 {% block content %}
 {% if user.email %}
-
-You are now logged-in {{ user.email }} ;)
-
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">Authenticated</h1>
+    <p class="lead text-muted">You are already logged {{ user.email }} ;)</p>
+    <p>
+      <a href="/signin" class="btn btn-primary my-2">Add your IP</a>
+      {% if user.is_admin %}
+      <a href="/ips" class="btn btn-secondary my-2">Review user's Ips</a>
+      {% endif %}
+    </p>
+  </div>
+</section>
 {% else %}
-<form method="POST">
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Email</label>
-      <input type="email" class="form-control" name="username" value="{{username}}" placeholder="Email">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Password</label>
-      <input type="password" class="form-control" name="password" value="{{password}}" placeholder="Password">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
+<div class="container-sm" >
+
+<form class="form-signin form-group" method="POST">
+<div class="text-center mb-4">
+  <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+  <p>If you haven't signed up yet, consider <a href="/register">registering</a>.
+</div>
+<div class="mb-2">
+  <input type="email" id="inputEmail" class="form-control" name="username" value="{{username}}"
+    placeholder="Email address" required autofocus>
+</div>
+
+<div class="mb-2">
+  <input type="password" id="inputPassword" class="form-control" name="password" value="{{password}}"
+    placeholder="Password" required>
+</div>
+<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</div>
 </form>
+
 {% endif %}
+
+
+
+
 {% endblock %}

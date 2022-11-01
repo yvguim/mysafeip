@@ -42,11 +42,9 @@ async def signin(request: Request, db: Session = Depends(get_db)):
 
 @app.post("/signin")
 def login(response: Response,request: Request, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends() ):
-    """
-    Get the JWT for a user with data from OAuth2 request form body.
-    """
+    client_host = request.client.host
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
-    response = templates.TemplateResponse("signin.html", {"request": request, "user": user})
+    response = templates.TemplateResponse("home.html", {"request": request, "client_host": client_host, "user": user})
 
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")  # 3
@@ -63,8 +61,11 @@ def login(response: Response,request: Request, db: Session = Depends(get_db), fo
     return response
 
 @app.get("/logout")
-def logout(response : Response):
-  response = RedirectResponse('/signin', status_code= 302)
+def logout(response : Response,request: Request):
+  client_host = request.client.host
+  user = ""
+  #response = RedirectResponse('/signin', status_code= 302)
+  response = templates.TemplateResponse("home.html", {"request": request, "client_host": client_host, "user": user})
   response.delete_cookie(key ='access_token')
   return response
 

@@ -1,19 +1,71 @@
 {%extends "layout.html" %}
 
 {% block content %}
+<section class="jumbotron text-center">
+    <div class="container">
 
 
-{% if user.email %}
-Hello dear <b>{{ user.email }}</b>, <br>
-{% if user.is_admin %}
-You are an admin, <br>
-{% endif %}
-You come from  <b>{{ client_host}}</b> today.
+        {% if user.email %}
+        <h1 class="jumbotron-heading">Welcome back</h1>
+        Hi {{ user.email }}
+        <p class="lead text-muted">You come from <b>{{ client_host }}</b> yet.</p>
+        <p>
+            <a href="/signin" class="btn btn-primary my-2">Add your IP</a>
+            {% if user.is_admin %}
+            <a href="/ips" class="btn btn-secondary my-2">Review user's Ips</a>
+            {% endif %}
+        </p>
+        {% else %}
 
-{% else %}
-Hello dear <b>{{ client_host}}</b>, <br>
-You are not authenticated. Consider signin or login ;)
-{% endif %}
+        <h1 class="jumbotron-heading">{{ client_host }}</h1>
+        <p class="lead text-muted">Hi! You are not authenticated. Consider signin or login ;)</p>
+        <p>
+            <a href="/signin" class="btn btn-primary my-2">Sign in</a>
+            <a href="/register" class="btn btn-secondary my-2">Register</a>
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <p class="card-text">By allowing only you and your community to access your applications, you limit attacks and bot scanning.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <p class="card-text">Mysafeip allow users to use website or dedicated API to register IPs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <p class="card-text">Don't wanna store plain text IP on Mysafeip instances? No problem, organisation can use client encrypted storage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock %}

@@ -7,56 +7,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MySafeip</title>
   <link href="/static/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/floating-labels.css" rel="stylesheet">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <div class="container">
-      <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="30"
-          height="30"> Mysafeip (MIP)</a>y
-          {% if user.email%}
-      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <header>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="30"
+            height="30"> Mysafeip (MIP)</a>y
+        {% if user.email%}
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 
-        <span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          
-          <li class="nav-item">
-            <a href="/ips" class="nav-link">IP</a>
-          </li>
-          <li class="nav-item">
-            <a href="/users" class="nav-link">Users</a>
-          </li>
-          <li class="nav-item">
-            <a href="/organisations" class="nav-link">Organisations</a>
-          </li>
-          
+          <span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a href="/ips" class="nav-link">IP</a>
+            </li>
+            <li class="nav-item">
+              <a href="/users" class="nav-link">Users</a>
+            </li>
+            <li class="nav-item">
+              <a href="/organisations" class="nav-link">Organisations</a>
+            </li>
 
 
-        </ul>
+
+          </ul>
+          {% endif %}
+        </div>{% if user.email %}
+        <form class="d-flex" action="/logout" method="GET">
+          <button type="submit" class="btn btn-danger">Log out</button>
+        </form>
+        {% else %}
+        <form class="d-flex" action="/signin" method="GET">
+          <button type="submit" class="btn btn-outline-primary m-1">Sign in</button>
+        </form>
+        <form class="d-flex" action="/register" method="GET">
+          <button type="submit" class="btn btn-outline-primary m-1">Register</button>
+        </form>
         {% endif %}
-      </div>{% if user.email %}
-      <form class="d-flex" action="/logout" method="GET">
-        <button type="submit" class="btn btn-danger">Log out</button>
-      </form>
-      {% else %}
-      <form class="d-flex" action="/signin" method="GET">
-        <button type="submit" class="btn btn-outline-primary m-1">Sign in</button>
-      </form>
-      <form class="d-flex" action="/register" method="GET">
-        <button type="submit" class="btn btn-outline-primary m-1">Register</button>
-      </form>
-      {% endif %}
+      </div>
+    </nav>
+  </header>
+  <main role="main">
+    {% block content %}
+    {% endblock %}
+  </main
+  <footer class="text-muted">
+    <div class="container">
+      <p>Mysafeip is an opensource project aiming to add more security.</p>
+      <p>New to Mysafeip? <a href="https://github.com/yvguim/mysafeip">Visit github homepage</a> or read our <a href="/getting-started">getting started guide</a>.</p>
     </div>
-  </nav>
-  </div>
-  <div class="container">
-    <div class="row">
-      {% block content %}
-      {% endblock %}
-    </div>
-  </div>
+  </footer>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
