@@ -21,4 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd app/
-        find . -type f -name "*.py" | grep -v alembic | xargs pylint
+        find . -type f -name "*.py" | grep -v alembic | xargs pylint --good-names "db"
