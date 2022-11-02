@@ -2,36 +2,35 @@
 
 {% block content %}
 
-<div class="content">
-  <div class="ui middle aligned center aligned grid">
-    <div class="column">
-      <h2 class="ui teal image header">
-        <div class="content">
-          Register a new account
-        </div>
-      </h2>
-      <form class="ui large form" method="POST">
-        <div class="ui stacked segment">
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="email" value="{{email}}" placeholder="E-mail address" >
-            </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" value="{{password}}" placeholder="Password">
-            </div>
-          </div>
-          <button type="submit" class="ui fluid large teal submit button">Register</button>
-        </div>
-  
-        <div class="ui error message"></div>
-  
-      </form>
-  
+{% if user.email %}
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">Authenticated</h1>
+    <p class="lead text-muted">You are logged as {{ user.email }}</p>
+    <p>
+      <a href="/post_ip" class="btn btn-primary my-2">Add your IP</a>
+      {% if user.is_admin %}
+      <a href="/ips" class="btn btn-secondary my-2">Review user's Ips</a>
+      {% endif %}
+    </p>
   </div>
-  </div>
+</section>
+{% else %}
+<div class="text-center mt-5">
+  <form style="max-width:480px;margin:auto;" method="POST">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+    </div>
+    <input type="email" id="inputEmail" class="form-control mb-1" name="email" value="{{email}}"
+      placeholder="Email address" required autofocus>
+    <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
+      placeholder="Password" required>
+    <input type="password" id="inputPassword" class="form-control mb-3" name="confirm_password" value="{{confirm_password}}"
+      placeholder="Confir your password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+  </form>
+</div>
+
+{% endif %}
 
 {% endblock %}

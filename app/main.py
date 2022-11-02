@@ -7,12 +7,15 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form
+from fastapi.responses import RedirectResponse
 
-from auth import authenticate,  create_access_token, get_current_user, check_user
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form, status
+
+from auth import authenticate, create_access_token, get_current_user, check_user
 import crud
 import models
 import schemas
+from settings import settings
 from database import engine, get_db
 
 #Init database and tables if not exists
@@ -85,7 +88,7 @@ def post_signin(
             }
     alert["success"] = "Signin success"
     response = templates.TemplateResponse(
-        "home.html",
+        "signin.html",
         {"request": request, "client_host": client_host, "user": user, "alert": alert})
     response.set_cookie(
     key="access_token",
@@ -114,17 +117,36 @@ def logout(response : Response,request: Request):
 async def register(request: Request, db: Session = Depends(get_db)):
     """register get request"""
     alert = {"success": "","danger": "","warning": ""}
+
+    if settings.DISABLE_REGISTER:
+        alert["warning"] = "Register is not allowed"
+
     user = await check_user(request, db)
     return templates.TemplateResponse("register.html", {"request": request, "user": user, "alert": alert})
 
 @app.post("/register")
-def post_register(request: Request, email: str = Form(), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
+async def post_register(request: Request, email: str = Form(), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
     """register post request"""
+    client_host = request.client.host
     alert = {"success": "","danger": "","warning": ""}
+    user = await check_user(request, db)
+    if settings.DISABLE_REGISTER:
+        alert["danger"] = "Register is not allowed"
+        response = templates.TemplateResponse(
+        "register.html",
+        {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
+        return response
+
+
+    if user:
+        alert["warning"] = "You are already logged"
+        response = templates.TemplateResponse(
+        "register.html",
+        {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
+        return response
 
     db_user = crud.get_user_by_email(db, email)
-    client_host = request.client.host
-    user = ""
+
     if db_user:
         alert["warning"] = "Email already registered."
         response = templates.TemplateResponse(
@@ -137,9 +159,11 @@ def post_register(request: Request, email: str = Form(), password: str = Form(),
         "register.html",
         {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
         return response
-    
-    if schemas.UserCreate(email=email, is_admin=False, password=password):
-        alert["success"] = "Account creation successfull, you can now signin."
+
+    new_user = schemas.UserCreate(email=email, is_admin=False, password=password)
+    user = crud.create_user(db=db, user=new_user)
+    if user:
+        alert["success"] = "Account creation successfull."
     else:
         alert["danger"] = "An error occured during your account creation."
         response = templates.TemplateResponse(
@@ -147,11 +171,20 @@ def post_register(request: Request, email: str = Form(), password: str = Form(),
         {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
         return response
     
+    access_token = create_access_token(sub=user.id)
+    encoded_token = encoders.jsonable_encoder(access_token)
+
     response = templates.TemplateResponse(
-        "signin.html",
+        "register.html",
         {"request": request, "client_host": client_host, "user": user, "alert": alert})
 
+    response.set_cookie(
+    key="access_token",
+    value=f"Bearer {encoded_token}",
+    httponly=True)
+
     return response
+    #return RedirectResponse("/signin", status_code=status.HTTP_303_SEE_OTHER)    
 
 
 @app.get("/get_users/", response_model=list[schemas.User])
@@ -180,13 +213,29 @@ current_user: models.User = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@app.post("/post_ip/", response_model=schemas.Ip)
-def create_ip_for_user(request: Request,
+@app.get("/create_ip/", response_model=schemas.Ip)
+def get_create_ip(request: Request,
+current_user: models.User = Depends(get_current_user)):
+    """declare one ip"""
+    alert = {"success": "","danger": "","warning": ""}
+
+    ip = request.client.host
+    return templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
+
+
+@app.post("/create_ip/", response_model=schemas.Ip)
+def post_create_ip(request: Request,
+ip: str = Form(),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """declare one ip"""
-    ip_value = request.client.host
-    return crud.create_user_ip(db=db, ip=ip_value, user_id=current_user.id)
+    alert = {"success": "","danger": "","warning": ""}
+
+    ip_created = crud.create_user_ip(db=db, ip=ip, user_id=current_user.id)
+    if ip_created:
+        alert["success"] = str(ip_created.value) + " is now trusted"
+    response = templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
+    return response
 
 
 @app.get("/api/get_ips/", response_model=list[schemas.Ip])

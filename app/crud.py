@@ -23,7 +23,7 @@ def create_user(db: Session, user: UserCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user.email
+    return db_user
 
 def get_ips(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Ip).offset(skip).limit(limit).all()
