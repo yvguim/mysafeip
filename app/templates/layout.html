@@ -7,10 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MySafeip</title>
   <link href="/static/bootstrap.min.css" rel="stylesheet">
-  <link href="/static/floating-labels.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
   <header>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <div class="container">
@@ -33,9 +32,6 @@
             <li class="nav-item">
               <a href="/organisations" class="nav-link">Organisations</a>
             </li>
-
-
-
           </ul>
           {% endif %}
         </div>{% if user.email %}
@@ -44,29 +40,49 @@
         </form>
         {% else %}
         <form class="d-flex" action="/signin" method="GET">
-          <button type="submit" class="btn btn-outline-primary m-1">Sign in</button>
+          <button type="submit" class="btn btn-outline-primary btn-sm m-1">Sign in</button>
         </form>
         <form class="d-flex" action="/register" method="GET">
-          <button type="submit" class="btn btn-outline-primary m-1">Register</button>
+          <button type="submit" class="btn btn-outline-primary btn-sm m-1">Register</button>
         </form>
         {% endif %}
       </div>
     </nav>
   </header>
-  <main role="main">
-    {% block content %}
-    {% endblock %}
-  </main
-  <footer class="text-muted">
-    <div class="container">
-      <p>Mysafeip is an opensource project aiming to add more security.</p>
-      <p>New to Mysafeip? <a href="https://github.com/yvguim/mysafeip">Visit github homepage</a> or read our <a href="/getting-started">getting started guide</a>.</p>
+  <main role="main class=" flex-shrink-0"">
+    {% if alert['success'] %}
+    <div class="alert alert-success" role="alert">
+      {{ alert['success'] }}
     </div>
-  </footer>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="/static/bootstrap.bundle.min.js"></script>
+    {% endif %}
+    {% if alert['danger'] %}
+    <div class="alert alert-danger" role="alert">
+      {{ alert['danger'] }}
+    </div>
+    {% endif %}
+    {% if alert['warning'] %}
+    <div class="alert alert-warning" role="alert">
+      {{ alert['warning'] }}
+    </div>
+    {% endif %}
+
+    <div class="container mt-5">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
+  <footer class="fixed-bottom" style="background-color: #8b89899a;">
+    <div class="container">
+      <span class="text-muted">
+        <p>Mysafeip is an opensource project.
+          New to Mysafeip? <a href="https://github.com/yvguim/mysafeip">Visit github homepage</a> or read our <a
+            href="/getting-started">getting started guide</a>.</p>
+      </span>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

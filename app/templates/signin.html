@@ -15,25 +15,19 @@
   </div>
 </section>
 {% else %}
-<div class="container-sm" >
-
-<form class="form-signin form-group" method="POST">
-<div class="text-center mb-4">
-  <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-  <p>If you haven't signed up yet, consider <a href="/register">registering</a>.
+<div class="text-center mt-5">
+  <form style="max-width:480px;margin:auto;" method="POST">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+      <p>If you haven't signed up yet, consider <a href="/register">registering</a>.
+    </div>
+    <input type="email" id="inputEmail" class="form-control mb-1" name="username" value="{{username}}"
+      placeholder="Email address" required autofocus>
+    <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
+      placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
 </div>
-<div class="mb-2">
-  <input type="email" id="inputEmail" class="form-control" name="username" value="{{username}}"
-    placeholder="Email address" required autofocus>
-</div>
-
-<div class="mb-2">
-  <input type="password" id="inputPassword" class="form-control" name="password" value="{{password}}"
-    placeholder="Password" required>
-</div>
-<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-</div>
-</form>
 
 {% endif %}
 

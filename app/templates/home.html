@@ -6,8 +6,8 @@
 
 
         {% if user.email %}
-        <h1 class="jumbotron-heading">Welcome back</h1>
-        Hi {{ user.email }}
+        <h1 class="jumbotron-heading">Welcome back {{ user.email }}</h1>
+
         <p class="lead text-muted">You come from <b>{{ client_host }}</b> yet.</p>
         <p>
             <a href="/signin" class="btn btn-primary my-2">Add your IP</a>
