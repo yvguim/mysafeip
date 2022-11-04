@@ -17,12 +17,20 @@ import models
 import schemas
 from settings import settings
 from database import engine, get_db
+from routers import users
 
 #Init database and tables if not exists
 models.Base.metadata.create_all(bind=engine)
 
 #Init fastapi and disable docs without login
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+#Include routers
+app.include_router(users.router)
+
+#Mount static directory files and jinja files
+app.mount("/static", StaticFiles(directory="templates/static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/docs")
 async def get_documentation(current_user: models.User = Depends(get_current_user)):
@@ -37,9 +45,7 @@ async def openapi(current_user: models.User = Depends(get_current_user)):
     if current_user.is_admmin:
         return get_openapi(title = "FastAPI", version="0.1.0", routes=app.routes)
     raise HTTPException(status_code=401, detail="Only admins can use openapi.json")
-#Mount static directory files and jinja files
-app.mount("/static", StaticFiles(directory="templates/static"), name="static")
-templates = Jinja2Templates(directory="templates")
+
 
 # Pages definitions
 
@@ -62,7 +68,8 @@ async def get_signin(request: Request, db: Session = Depends(get_db)):
 
 @app.post("/signin")
 def post_signin(
-    response: Response,request: Request,
+    response: Response,
+    request: Request,
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends() ):
     """Signin post request"""
@@ -187,31 +194,7 @@ async def post_register(request: Request, email: str = Form(), password: str = F
     #return RedirectResponse("/signin", status_code=status.HTTP_303_SEE_OTHER)    
 
 
-@app.get("/get_users/", response_model=list[schemas.User])
-def read_users(skip: int = 0,
-limit: int = 100,
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """read and return all users"""
-    if current_user.is_admin:
-        users = crud.get_users(db, skip=skip, limit=limit)
-    else:
-        raise HTTPException(status_code=401, detail="Only admins can search users")
-    return users
 
-@app.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int,
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """search and return one user by id"""
-    if current_user.is_admin:
-        db_user = crud.get_user(db, user_id=user_id)
-    else:
-        raise HTTPException(status_code=401, detail="Only admins can search users")
-
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
 
 @app.get("/create_ip/", response_model=schemas.Ip)
 def get_create_ip(request: Request,
