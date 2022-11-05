@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form, status
+from fastapi import Depends, HTTPException, Request, Form
 
-from auth import authenticate, create_access_token, get_current_user, check_user
+from auth import get_current_user
 import crud
 import models
 import schemas
@@ -59,7 +59,6 @@ current_user: models.User = Depends(get_current_user)):
 
 @router.post("/read", tags=["users"])
 def delete_users(request: Request,
-email: str = Form(),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""

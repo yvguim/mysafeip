@@ -6,7 +6,6 @@ from models import User, Ip
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
-
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
@@ -33,8 +32,24 @@ def delete_user(db: Session, email):
     db.commit()
     return True
 
-def get_ips(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Ip).offset(skip).limit(limit).all()
+def get_ips(db: Session, user):
+    if user.is_admin:
+        return db.query(Ip).all()
+    else:
+        return db.query(Ip).filter(Ip.owner == user)
+
+def get_ip(db: Session, ip_id: int):
+    return db.query(Ip).get(ip_id)
+
+def delete_ip(db: Session, id):
+    print(id)
+    db_ip = get_ip(db, id)
+    print(db_ip)
+    if not db_ip:
+        return False
+    db.delete(db_ip)
+    db.commit()
+    return True
 
 def create_user_ip(db: Session, ip: IpCreate, user_id: int):
     db_ip = Ip(description="test", value=ip, owner_id=user_id)

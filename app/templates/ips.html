@@ -1,0 +1,30 @@
+{%extends "layout.html" %}
+
+{% block content %}
+{% if ips %}
+<div class="container">
+  <table class="table ">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">User</th>
+        <th scope="col">IP</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ip in ips %}
+      <tr>
+        <th scope="row">{{ ip.id }}</th>
+        <td>{{ ip.owner.email }}</td>
+        <td>{{ ip.value }}</td>
+        <td>{{ ip.description }}</td>
+        <td><form method="POST"> <input hidden=true name="ip" value="{{ ip.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}

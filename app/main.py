@@ -17,7 +17,7 @@ import models
 import schemas
 from settings import settings
 from database import engine, get_db
-from routers import users
+from routers import users, ips
 
 #Init database and tables if not exists
 models.Base.metadata.create_all(bind=engine)
@@ -27,6 +27,8 @@ app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
 #Include routers
 app.include_router(users.router)
+app.include_router(ips.router)
+
 
 #Mount static directory files and jinja files
 app.mount("/static", StaticFiles(directory="templates/static"), name="static")
@@ -192,43 +194,3 @@ async def post_register(request: Request, email: str = Form(), password: str = F
 
     return response
     #return RedirectResponse("/signin", status_code=status.HTTP_303_SEE_OTHER)    
-
-
-
-
-@app.get("/create_ip/", response_model=schemas.Ip)
-def get_create_ip(request: Request,
-current_user: models.User = Depends(get_current_user)):
-    """declare one ip"""
-    alert = {"success": "","danger": "","warning": ""}
-
-    ip = request.client.host
-    return templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
-
-
-@app.post("/create_ip/", response_model=schemas.Ip)
-def post_create_ip(request: Request,
-ip: str = Form(),
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """declare one ip"""
-    alert = {"success": "","danger": "","warning": ""}
-
-    ip_created = crud.create_user_ip(db=db, ip=ip, user_id=current_user.id)
-    if ip_created:
-        alert["success"] = str(ip_created.value) + " is now trusted"
-    response = templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
-    return response
-
-
-@app.get("/api/get_ips/", response_model=list[schemas.Ip])
-def read_ips(skip: int = 0,
-limit: int = 100,
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """return all ips"""
-    if current_user.is_admin:
-        ips = crud.get_ips(db, skip=skip, limit=limit)
-    else:
-        ips = crud.get_ips(db, skip=skip, limit=limit)
-    return ips
