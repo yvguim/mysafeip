@@ -33,7 +33,7 @@ current_user: models.User = Depends(get_current_user)):
     alert = {"success": "","danger": "","warning": ""}
     user = current_user
     if current_user.is_admin:
-        users = crud.get_users(db, skip=skip, limit=limit)
+        users = crud.get_users(db)
     else:
         users = []
         alert["warning"] = "Only admin can get users"
@@ -56,3 +56,24 @@ current_user: models.User = Depends(get_current_user)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@router.post("/read", tags=["users"])
+def delete_users(request: Request,
+email: str = Form(),
+db: Session = Depends(get_db),
+current_user: models.User = Depends(get_current_user)):
+    """read and return all users"""
+    alert = {"success": "","danger": "","warning": ""}
+    user = current_user
+    
+    if not current_user.is_admin:
+        alert["warning"] = "Only admin can delete users"
+
+    if crud.delete_user(db, email):
+        alert["success"] = "User " + email + " deleted successfully"
+    else:
+        alert["warning"] = "An error occured while deleting" + email
+    users = crud.get_users(db)
+    return templates.TemplateResponse(
+        "users.html",
+        {"request": request, "users": users, "user": user, "alert": alert})
