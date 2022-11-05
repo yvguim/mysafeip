@@ -36,12 +36,15 @@ current_user: models.User = Depends(get_current_user)):
 
 @router.post("/create_ip/", response_model=schemas.Ip)
 def post_create_ip(request: Request,
-ip: str = Form(),
+ip: str = Form(""),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """declare one ip"""
     alert = {"success": "","danger": "","warning": ""}
 
+    if ip == '':
+        ip = request.client.host
+    print(ip)
     ip_created = crud.create_user_ip(db=db, ip=ip, user_id=current_user.id)
     if ip_created:
         alert["success"] = str(ip_created.value) + " is now trusted"
@@ -49,20 +52,21 @@ current_user: models.User = Depends(get_current_user)):
     return response
 
 
-@router.get("/get_ips/", response_model=list[schemas.Ip])
+@router.get("/get_ips/")
 def read_ips(
 request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """return all ips"""
     alert = {"success": "","danger": "","warning": ""}
+    ips = crud.get_ips(db, user = current_user)
+    
+    # if get request come from mysafeip-client, return json
+    if request.headers.get('Cli'):
+        ip_list = [{"owner": ip.owner.email, "value": ip.value,"description": ip.description} for ip in ips]
+        return ip_list
 
-    if current_user.is_admin:
-        ips = crud.get_ips(db, user = current_user)
-        response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
-    else:
-        ips = crud.get_ips(db, user = current_user)
-        response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
+    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
     return response
 
 @router.post("/get_ips/")

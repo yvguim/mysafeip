@@ -60,6 +60,7 @@ current_user: models.User = Depends(get_current_user)):
 @router.post("/read", tags=["users"])
 def delete_users(request: Request,
 db: Session = Depends(get_db),
+email: str = Form(),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
     alert = {"success": "","danger": "","warning": ""}

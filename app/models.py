@@ -12,7 +12,7 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    ips = relationship("Ip", back_populates="owner")
+    ips = relationship("Ip", back_populates="owner", cascade="all, delete-orphan")
 
 
 class Ip(Base):

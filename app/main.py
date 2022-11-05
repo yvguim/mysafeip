@@ -37,14 +37,14 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/docs")
 async def get_documentation(current_user: models.User = Depends(get_current_user)):
     """Force authentication for doc page"""
-    if current_user.is_admmin:
+    if current_user.is_admin:
         return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
     raise HTTPException(status_code=401, detail="Only admins can use fastapi docs")
 
 @app.get("/openapi.json")
 async def openapi(current_user: models.User = Depends(get_current_user)):
     """Force authentication for openapi page"""
-    if current_user.is_admmin:
+    if current_user.is_admin:
         return get_openapi(title = "FastAPI", version="0.1.0", routes=app.routes)
     raise HTTPException(status_code=401, detail="Only admins can use openapi.json")
 
