@@ -104,15 +104,23 @@ current_user: models.User = Depends(get_current_user)):
 async def reset_password(user_id: int, request: Request, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db),):
     """register get request"""
     alert = {"success": "","danger": "","warning": ""}
-    print(user_id)
+    #if not current_user.is_admin and (current_user != user_id):
+    #    alert["danger"] = "You are not allowed to do this."
+    #    user = False
+    #    return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
+    
     user = crud.get_user(db, user_id)
-
     return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
 
 @router.post("/reset_password/{user_id}")
 async def post_reset_password(user_id: int,request: Request, current_user: models.User = Depends(get_current_user), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
     """register post request"""
     alert = {"success": "","danger": "","warning": ""}
+    if not current_user.is_admin and (current_user != user_id):
+        alert["danger"] = "You are not allowed to do this."
+        user = False
+        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
+
     user = crud.get_user(db, user_id)
     if not password_validity(password):
         alert["warning"] = "Password must be 6 characters minimum, contain lower case, upper case, a number and special character."
