@@ -17,7 +17,14 @@
         <th scope="row">{{ u.id }}</th>
         <td>{{ u.email }}</td>
         <td>{{ u.is_admin }}</td>
-        <td><form method="POST"> <input hidden=true name="email" value="{{ u.email }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
+        <td>
+          <form method="POST"> <input hidden=true name="email" value="{{ u.email }}"><button
+              class="btn btn-sm btn-danger btn-block" type="submit">Delete</button></form>
+        </td>
+        <td>
+          <form method="GET" action="/users/reset_password/{{ u.id }}"><button class="btn btn-sm btn-primary btn-block"
+            type="submit">Reset password</button></form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

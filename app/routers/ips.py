@@ -44,7 +44,7 @@ current_user: models.User = Depends(get_current_user)):
 
     if ip == '':
         ip = request.client.host
-    print(ip)
+        
     ip_created = crud.create_user_ip(db=db, ip=ip, user_id=current_user.id)
     if ip_created:
         alert["success"] = str(ip_created.value) + " is now trusted"

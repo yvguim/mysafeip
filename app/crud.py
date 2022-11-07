@@ -13,7 +13,6 @@ def get_user_by_email(db: Session, email: str):
 def get_users(db: Session):
     return db.query(User).all()
 
-
 def create_user(db: Session, user: UserCreate):
     db_user = User(
         email=user.email,
@@ -23,6 +22,13 @@ def create_user(db: Session, user: UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def reset_user_password(db: Session, user: User, password: str):
+    user = db.query(User).get(user.id)
+    user.hashed_password=security.get_password_hash(password)
+    db.commit()
+    db.refresh(user)
+    return user
 
 def delete_user(db: Session, email):
     db_user = get_user_by_email(db, email)

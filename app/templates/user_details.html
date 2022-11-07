@@ -1,0 +1,33 @@
+{%extends "layout.html" %}
+
+{% block content %}
+{% if user_details %}
+<div class="container">
+  <table class="table ">
+  <thead>
+    <tr>
+      <th scope="col">Email</th>
+      <th scope="col">is_admin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ user_details.email }}</th>
+      <td>{{ user_details.is_admin }}</td>
+      {% if user_details.id == user.id %}
+      <td>
+        <form method="GET" action="/users/reset_password/{{ user_details.id }}"> <input hidden=true name="email" value="{{ user_details.email }}"><button
+            class="btn btn-sm btn-primary btn-block" type="submit">Reset password</button></form>
+      </td>
+      {% endif %}
+      <td>
+        <form method="POST" action="/users/read"> <input hidden=true name="email" value="{{ user.email }}"><button
+            class="btn btn-sm btn-danger btn-block" type="submit">Delete</button></form>
+      </td>
+    </tr>
+  </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}

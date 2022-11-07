@@ -6,19 +6,21 @@
 
 
         {% if user.email %}
-        <h1 class="jumbotron-heading">Welcome back {{ user.email }}</h1>
+        <h1 class="jumbotron-heading" style="margin-top:2em;margin-bottom:3em;">Welcome back {{ user.email }}</h1>
 
-        <p class="lead text-muted">You come from <b>{{ client_host }}</b> yet.</p>
-        <p>
-            <a href="/signin" class="btn btn-primary my-2">Add your IP</a>
+        <p class="lead text-muted mt-5"  >You come from <b>{{ client_host }}</b> yet.</p>
+        <p style="margin-top:2em;margin-bottom:3em;">
+            <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
             {% if user.is_admin %}
-            <a href="/ips" class="btn btn-secondary my-2">Review user's Ips</a>
+              <a href="/users/read" class="btn btn-success my-2">Users</a>
+            {% else %}
+              <a href="/users/details/{{ user.id }}" class="btn btn-success my-2">My account</a>
             {% endif %}
         </p>
         {% else %}
 
-        <h1 class="jumbotron-heading">{{ client_host }}</h1>
-        <p class="lead text-muted">Hi! You are not authenticated. Consider signin or login ;)</p>
+        <h1 class="jumbotron-heading" style="margin-top:2em;margin-bottom:3em;">Here is your IP: {{ client_host }}</h1>
+        <p class="lead text-muted"> You are not authenticated. Consider signin or login ;)</p>
         <p>
             <a href="/signin" class="btn btn-primary my-2">Sign in</a>
             <a href="/register" class="btn btn-primary my-2">Register</a>
@@ -30,26 +32,18 @@
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4 box-shadow">
+            <div class="col-md-6">
+                <div class="card mb-6 box-shadow">
                     <div class="card-body">
-                        <p class="card-text">By allowing only you and your community to access your applications, you limit attacks and bot scanning.
+                        <p class="card-text">With Mysafeip, you limit attacks and bot scanning.
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card mb-4 box-shadow">
+            <div class="col-md-6">
+                <div class="card mb-6 box-shadow">
                     <div class="card-body">
                         <p class="card-text">Mysafeip allow users to use website or dedicated API to register IPs.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mb-4 box-shadow">
-                    <div class="card-body">
-                        <p class="card-text">Don't wanna store plain text IP on Mysafeip instances? No problem, organisation can use client encrypted storage.
-                        </p>
                     </div>
                 </div>
             </div>

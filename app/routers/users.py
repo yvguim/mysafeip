@@ -2,16 +2,14 @@ import models
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi import Depends, Request, Form, APIRouter, Depends
+from fastapi.responses import RedirectResponse
 
-from fastapi import Depends, HTTPException, Request, Form
-
-from auth import get_current_user
+from auth import get_current_user, check_user, password_validity
 import crud
 import models
 import schemas
 from database import get_db
-from fastapi import APIRouter, Depends, HTTPException
-
 
 router = APIRouter(
     prefix="/users",
@@ -25,8 +23,7 @@ router.mount("/static", StaticFiles(directory="templates/static"), name="static"
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/read", tags=["users"])
-def read_users(request: Request, skip: int = 0,
-limit: int = 100,
+def read_users(request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
@@ -43,19 +40,23 @@ current_user: models.User = Depends(get_current_user)):
         {"request": request, "users": users, "user": user, "alert": alert})
 
 
-@router.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int,
+@router.get("/details/{user_id}", response_model=schemas.User)
+def read_user_details(user_id: int,
+request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """search and return one user by id"""
+    alert = {"success": "","danger": "","warning": ""}
     if current_user.is_admin:
-        db_user = crud.get_user(db, user_id=user_id)
+        user_details = crud.get_user(db, user_id=user_id)
     else:
-        raise HTTPException(status_code=401, detail="Only admins can search users")
-
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+        user_details = current_user
+    if user_details is None:
+        alert["warning"] = "User does not exist."
+        user_details = None 
+    return templates.TemplateResponse(
+        "user_details.html",
+        {"request": request, "user_details": user_details, "user": current_user, "alert": alert})
 
 @router.post("/read", tags=["users"])
 def delete_users(request: Request,
@@ -65,15 +66,85 @@ current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
     alert = {"success": "","danger": "","warning": ""}
     user = current_user
-    
-    if not current_user.is_admin:
-        alert["warning"] = "Only admin can delete users"
+    users = ""
+    # non admin user can't delete other account
+    if (not user.is_admin) and (user.email != email):
+        alert["warning"] = "Only admin can delete other users"
+        return templates.TemplateResponse(
+        "users.html",
+        {"request": request, "users": "", "user": user, "alert": alert})
+
+    # admin can't delete his own account
+    if (user.is_admin) and (user.email == email):
+        alert["warning"] = "you can't delete your own admin account"
+        users = crud.get_users(db)
+        return templates.TemplateResponse(
+        "users.html",
+        {"request": request, "users": users, "user": user, "alert": alert})
 
     if crud.delete_user(db, email):
         alert["success"] = "User " + email + " deleted successfully"
     else:
         alert["warning"] = "An error occured while deleting" + email
-    users = crud.get_users(db)
+    
+    if user.is_admin:
+        users = crud.get_users(db)
+    else:
+        response = RedirectResponse('/', status_code= 302)
+        response.delete_cookie(key ='access_token')
+        return response
+
+
     return templates.TemplateResponse(
         "users.html",
         {"request": request, "users": users, "user": user, "alert": alert})
+
+
+@router.get("/reset_password/{user_id}")
+async def reset_password(user_id: int, request: Request, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db),):
+    """register get request"""
+    alert = {"success": "","danger": "","warning": ""}
+    print(user_id)
+    user = crud.get_user(db, user_id)
+
+    return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
+
+@router.post("/reset_password/{user_id}")
+async def post_reset_password(user_id: int,request: Request, current_user: models.User = Depends(get_current_user), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
+    """register post request"""
+    alert = {"success": "","danger": "","warning": ""}
+    user = crud.get_user(db, user_id)
+    if not password_validity(password):
+        alert["warning"] = "Password must be 6 characters minimum, contain lower case, upper case, a number and special character."
+        response = templates.TemplateResponse(
+        "reset_password.html",
+        {"request": request, "alert": alert, "user": user}) 
+        return response
+
+    if confirm_password != password:
+        alert["warning"] = "Password missmatch!"
+        response = templates.TemplateResponse(
+        "reset_password.html",
+        {"request": request, "alert": alert, "user": user}) 
+        return response
+    if (user.id != current_user.id) and (not current_user.is_admin):
+        alert["danger"] = "You are not allowed to reset other users passwords"
+        response = templates.TemplateResponse(
+        "register.html",
+        {"request": request, "alert": alert, "user": current_user}) 
+        return response
+    user = crud.reset_user_password(db=db, user=user, password=password)
+    print(user)
+
+    if not user:
+        alert["danger"] = "An error occured during password reset."
+        response = templates.TemplateResponse(
+        "register.html",
+        {"request": request, "alert": alert, "user": current_user}) 
+        return response
+    
+    alert["success"] = "Password reset successfull."
+    response = templates.TemplateResponse(
+        "reset_password.html",
+        {"request": request, "alert": alert, "user": user}) 
+    return response

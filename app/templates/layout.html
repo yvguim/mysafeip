@@ -13,8 +13,8 @@
   <header>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <div class="container">
-        <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="30"
-            height="30"> Mysafeip (MIP)</a>y
+        <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="70"
+            height="70"> Mysafeip (MIP)</a>
         {% if user.email%}
         <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,12 +29,15 @@
             <li class="nav-item">
               <a href="/ips/get_ips/" class="nav-link">Get IP</a>
             </li>
+            {% if user.is_admin %}
             <li class="nav-item">
               <a href="/users/read" class="nav-link">Users</a>
             </li>
+            {% else %}
             <li class="nav-item">
-              <a href="/organisations" class="nav-link">Organisations</a>
+              <a href="/users/details/{{ user.id }}" class="nav-link">My account</a>
             </li>
+            {% endif %}
           </ul>
           {% endif %}
         </div>{% if user.email %}

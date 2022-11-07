@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form, status
 
-from auth import authenticate, create_access_token, get_current_user, check_user
+from auth import authenticate, create_access_token, get_current_user, check_user, password_validity
 import crud
 import models
 import schemas
@@ -162,6 +162,14 @@ async def post_register(request: Request, email: str = Form(), password: str = F
         "register.html",
         {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
         return response
+
+    if not password_validity(password):
+        alert["warning"] = "Password must be 6 characters minimum, contain lower case, upper case, a number and special character."
+        response = templates.TemplateResponse(
+        "register.html",
+        {"request": request, "client_host": client_host, "user": user, "email": email, "alert": alert}) 
+        return response
+
     if confirm_password != password:
         alert["warning"] = "Password missmatch!"
         response = templates.TemplateResponse(

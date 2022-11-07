@@ -11,6 +11,8 @@ from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi import Request, HTTPException, status, Depends
 from fastapi.security.utils import get_authorization_scheme_param
 from database import get_db
+import re
+
 
 # Redefine OAuth2PasswordBearer to add cookie support (for browser)
 class OAuth2PasswordBearerWithCookie(OAuth2):
@@ -39,15 +41,28 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+                        headers={"WWW-Authenticate": "Bearer"},
+                    )
             else:
                 return None
         return param
-
+    
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl=f"/signin")
-
-
+    
+def password_validity(password: str):
+    if (len(password) < 6):
+        return False
+    elif not re.search("[a-z]" , password):
+        return False
+    elif not re.search("[A-Z]" , password):
+        return False
+    elif not re.search("[0-9]" , password):
+        return False
+    elif not re.search("[_@$]" , password):
+        return False
+    return True
+    
+    
 def authenticate(
     *,
     email: str,
