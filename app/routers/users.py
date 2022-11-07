@@ -104,10 +104,10 @@ current_user: models.User = Depends(get_current_user)):
 async def reset_password(user_id: int, request: Request, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db),):
     """register get request"""
     alert = {"success": "","danger": "","warning": ""}
-    #if not current_user.is_admin and (current_user != user_id):
-    #    alert["danger"] = "You are not allowed to do this."
-    #    user = False
-    #    return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
+    if not current_user.is_admin and (current_user != user_id):
+        alert["danger"] = "You are not allowed to do this."
+        user = False
+        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
     
     user = crud.get_user(db, user_id)
     return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert})
