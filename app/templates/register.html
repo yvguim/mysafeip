@@ -8,10 +8,7 @@
     <h1 class="jumbotron-heading">Authenticated</h1>
     <p class="lead text-muted">You are logged as {{ user.email }}</p>
     <p>
-      <a href="/post_ip" class="btn btn-primary my-2">Add your IP</a>
-      {% if user.is_admin %}
-      <a href="/ips" class="btn btn-secondary my-2">Review user's Ips</a>
-      {% endif %}
+      <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
     </p>
   </div>
 </section>

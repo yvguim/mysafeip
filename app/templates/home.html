@@ -3,26 +3,24 @@
 {% block content %}
 <section class="jumbotron text-center">
     <div class="container">
-
-
         {% if user.email %}
-        <h1 class="jumbotron-heading" style="margin-top:2em;margin-bottom:3em;">Welcome back {{ user.email }}</h1>
-
-        <p class="lead text-muted mt-5"  >You come from <b>{{ client_host }}</b> yet.</p>
+        <h1 class="jumbotron-heading" style="margin-top:2em;">Welcome back {{ user.email }}</h1>
+        <p class="lead text-muted mt-2">You come from <b>{{ client_host }}</b> yet.</p>
         <p style="margin-top:2em;margin-bottom:3em;">
             <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
             {% if user.is_admin %}
-              <a href="/users/read" class="btn btn-success my-2">Users</a>
+            <a href="/users/read" class="btn btn-success my-2">Users</a>
             {% else %}
-              <a href="/users/details/{{ user.id }}" class="btn btn-success my-2">My account</a>
+            <a href="/users/details/{{ user.id }}" class="btn btn-success my-2">My account</a>
             {% endif %}
         </p>
         {% else %}
+        <h1 class="jumbotron-heading" style="margin-top:1em;margin-bottom:1em;">Welcome on Mysafeip</h1>
 
-        <h1 class="jumbotron-heading" style="margin-top:2em;margin-bottom:3em;">Here is your IP: {{ client_host }}</h1>
-        <p class="lead text-muted"> You are not authenticated. Consider signin or login ;)</p>
+        <h2 class="jumbotron-heading" style="margin-top:1em;margin-bottom:3em;">Here is your IP: {{ client_host }}</h2>
+        <p class="lead text-muted"> You are not authenticated. Consider login or register ;)</p>
         <p>
-            <a href="/signin" class="btn btn-primary my-2">Sign in</a>
+            <a href="/signin" class="btn btn-primary my-2">Login</a>
             <a href="/register" class="btn btn-primary my-2">Register</a>
         </p>
         {% endif %}
@@ -32,23 +30,35 @@
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-6 box-shadow">
+            <div class="col-md-4">
+                <div class="card mb-6 box-shadow" style="height:12em;">
                     <div class="card-body">
-                        <p class="card-text">With Mysafeip, you limit attacks and bot scanning.
+
+                        <img class="d-inline-block align-top" src="/static/firewall.png" width="70" height="70">
+                        <p class="card-text">With Mysafeip, you <b>limit attacks and bot scanning</b> on your
+                            infrastructure by opening <b>firewall rules on the fly</b>.
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card mb-6 box-shadow">
+            <div class="col-md-4">
+                <div class="card mb-6 box-shadow" style="height:12em;">
                     <div class="card-body">
-                        <p class="card-text">Mysafeip allow users to use website or dedicated API to register IPs.</p>
+                        <img class="d-inline-block align-top" src="/static/api.png" width="70" height="70">
+                        <p class="card-text">Mysafeip offers a <b>web interface and APIs</b> to interact directly.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-6 box-shadow" style="height:12em;">
+                    <div class="card-body">
+                        <img class="d-inline-block align-top" src="/static/python.png" width="70" height="70">
+                        <p class="card-text">Mysafeip is an opensource project build on top of <b>Python</b>,
+                            <b>Fastapi</b> and <b>Bootstrap</b>.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
