@@ -11,6 +11,8 @@ import models
 import schemas
 from database import get_db
 
+alert = {"success": "","danger": "","warning": ""}
+
 router = APIRouter(
     prefix="/users",
     tags=["users"],
@@ -27,7 +29,6 @@ def read_users(request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
-    alert = {"success": "","danger": "","warning": ""}
     user = current_user
     if current_user.is_admin:
         users = crud.get_users(db)
@@ -46,7 +47,6 @@ request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """search and return one user by id"""
-    alert = {"success": "","danger": "","warning": ""}
     if current_user.is_admin:
         user_details = crud.get_user(db, user_id=user_id)
     else:
@@ -64,7 +64,6 @@ db: Session = Depends(get_db),
 email: str = Form(),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
-    alert = {"success": "","danger": "","warning": ""}
     user = current_user
     users = ""
     # non admin user can't delete other account
@@ -103,7 +102,6 @@ current_user: models.User = Depends(get_current_user)):
 @router.get("/reset_password/{user_id}")
 async def reset_password(user_id: int, request: Request, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db),):
     """register get request"""
-    alert = {"success": "","danger": "","warning": ""}
     if not current_user.is_admin and (current_user != user_id):
         alert["danger"] = "You are not allowed to do this."
         user = False
@@ -115,7 +113,6 @@ async def reset_password(user_id: int, request: Request, current_user: models.Us
 @router.post("/reset_password/{user_id}")
 async def post_reset_password(user_id: int,request: Request, current_user: models.User = Depends(get_current_user), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
     """register post request"""
-    alert = {"success": "","danger": "","warning": ""}
     if not current_user.is_admin and (current_user != user_id):
         alert["danger"] = "You are not allowed to do this."
         user = False

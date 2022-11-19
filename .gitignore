@@ -1,3 +1,5 @@
 venv
 __pycache__
 app/sql_app.db
+app/.env
+app/templates/instant_links.html

@@ -12,6 +12,7 @@ import schemas
 from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 
+alert = {"success": "","danger": "","warning": ""}
 
 router = APIRouter(
     prefix="/ips",
@@ -28,8 +29,7 @@ templates = Jinja2Templates(directory="templates")
 def get_create_ip(request: Request,
 current_user: models.User = Depends(get_current_user)):
     """declare one ip"""
-    alert = {"success": "","danger": "","warning": ""}
-
+    
     ip = request.client.host
     return templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
 
@@ -40,8 +40,7 @@ ip: str = Form(""),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """declare one ip"""
-    alert = {"success": "","danger": "","warning": ""}
-
+    
     if ip == '':
         ip = request.client.host
         
@@ -58,7 +57,6 @@ request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """return all ips"""
-    alert = {"success": "","danger": "","warning": ""}
     ips = crud.get_ips(db, user = current_user)
     
     # if get request come from mysafeip-client, return json
@@ -75,7 +73,6 @@ ip: str = Form(),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
-    alert = {"success": "","danger": "","warning": ""}
 
     if crud.delete_ip(db, ip):
         alert["success"] = "ip deleted successfully"

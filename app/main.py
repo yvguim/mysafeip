@@ -34,6 +34,8 @@ app.include_router(ips.router)
 app.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+alert = {"success": "","danger": "","warning": ""}
+
 @app.get("/docs")
 async def get_documentation(current_user: models.User = Depends(get_current_user)):
     """Force authentication for doc page"""
@@ -54,7 +56,6 @@ async def openapi(current_user: models.User = Depends(get_current_user)):
 @app.get("/")
 async def main(request: Request, db: Session = Depends(get_db)):
     """Home page get request"""
-    alert = {"success": "","danger": "","warning": ""}
     client_host = request.client.host
     user = await check_user(request, db)
     return templates.TemplateResponse(
@@ -64,7 +65,6 @@ async def main(request: Request, db: Session = Depends(get_db)):
 @app.get("/signin")
 async def get_signin(request: Request, db: Session = Depends(get_db)):
     """Signin get request"""
-    alert = {"success": "","danger": "","warning": ""}
     user = await check_user(request, db)
     return templates.TemplateResponse("signin.html", {"request": request, "user": user, "alert": alert})
 
@@ -75,7 +75,6 @@ def post_signin(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends() ):
     """Signin post request"""
-    alert = {"success": "","danger": "","warning": ""}
     client_host = request.client.host
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
     
@@ -109,7 +108,6 @@ def post_signin(
 @app.get("/logout")
 def logout(response : Response,request: Request):
     """logout get request"""
-    alert = {"success": "","danger": "","warning": ""}
     client_host = request.client.host
     user = ""
     #response = RedirectResponse('/signin', status_code= 302)
@@ -125,8 +123,6 @@ def logout(response : Response,request: Request):
 @app.get("/register")
 async def register(request: Request, db: Session = Depends(get_db)):
     """register get request"""
-    alert = {"success": "","danger": "","warning": ""}
-
     if settings.DISABLE_REGISTER:
         alert["warning"] = "Register is not allowed"
 
@@ -137,7 +133,6 @@ async def register(request: Request, db: Session = Depends(get_db)):
 async def post_register(request: Request, email: str = Form(), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
     """register post request"""
     client_host = request.client.host
-    alert = {"success": "","danger": "","warning": ""}
     user = await check_user(request, db)
     if settings.DISABLE_REGISTER:
         alert["danger"] = "Register is not allowed"

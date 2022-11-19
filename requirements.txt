@@ -10,3 +10,4 @@ python-jose
 python-multipart
 jinja2
 requests
+python-dotenv

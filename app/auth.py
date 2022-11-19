@@ -58,7 +58,7 @@ def password_validity(password: str):
         return False
     elif not re.search("[0-9]" , password):
         return False
-    elif not re.search("[_@$]" , password):
+    elif not re.search("[ !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]" , password):
         return False
     return True
     
@@ -130,5 +130,5 @@ async def check_user(request: Request, db):
     token = request.cookies.get("access_token")
     current_user = ""
     if token:
-        current_user: models.User = await get_current_user(token=token, db=db)
+        current_user: User = await get_current_user(token=token, db=db)
     return current_user
