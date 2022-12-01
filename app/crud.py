@@ -1,7 +1,8 @@
+import secrets
 from sqlalchemy.orm import Session
 import security
-from schemas import UserCreate, IpCreate
-from models import User, Ip
+from schemas import UserCreate, IpCreate, InstantAccessCreate
+from models import User, Ip, InstantAccess
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -57,10 +58,50 @@ def delete_ip(db: Session, id):
     db.commit()
     return True
 
-def create_user_ip(db: Session, ip: IpCreate, user_id: int):
-    db_ip = Ip(description="test", value=ip, owner_id=user_id)
-    db.add(db_ip)
-    db.commit()
-    db.refresh(db_ip)
-    return db_ip
+def get_ip_for_user(db: Session, user_id: int, ip, description):
+    return db.query(Ip).filter(Ip.owner_id == user_id, Ip.value == ip, Ip.description == description).first()
+
+def create_user_ip(db: Session, user_id: int, ip, description = ""):
+    print(user_id)
+    print(ip)
+    ip_exists = get_ip_for_user(db, user_id = user_id, ip = ip, description = description)
+    print(ip)
+    if not ip_exists:
+        ip = IpCreate(description=description, value=ip, owner_id=user_id)
+        ip_data = ip.dict()
+        db_ip = Ip(description=ip_data['description'], value=str(ip_data['value']), owner_id=ip_data['owner_id'])
+        db.add(db_ip)
+        db.commit()
+        db.refresh(db_ip)
+        return db_ip
+    return ip_exists
+
     
+def create_instant_access(db: Session, link: str, user_id: int):
+    unique_link = secrets.token_hex(16)
+    ia = InstantAccessCreate(link=link, unique_link=unique_link, owner_id=user_id)
+    ia_data = ia.dict()
+    db_ia = InstantAccess(link=str(ia_data['link']), unique_link=ia_data['unique_link'], owner_id=ia_data['owner_id'])
+    db.add(db_ia)
+    db.commit()
+    db.refresh(db_ia)
+    return db_ia
+    
+def get_link(db: Session, link_id: int):
+    return db.query(InstantAccess).get(link_id)
+
+def get_links(db: Session, user):
+    return db.query(InstantAccess).filter(InstantAccess.owner == user)
+
+def get_link_by_unique_link(db: Session, unique_link: str):
+    return db.query(InstantAccess).filter(InstantAccess.unique_link == unique_link).first()
+
+def delete_link(db: Session, id):
+    print(id)
+    db_link = get_link(db, id)
+    print(db_link)
+    if not db_link:
+        return False
+    db.delete(db_link)
+    db.commit()
+    return True

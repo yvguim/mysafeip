@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv = "refresh" content = "10; url = {{ link }}" />
+
+  <title>MySafeip</title>
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100" style="padding-bottom:70px;">
+  <header>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="70"
+            height="70"> Mysafeip (MIP)</a>
+      </div>
+    </nav>
+  </header>
+  <main role="main class=" flex-shrink-0"">
+    {% if alert['success'] %}
+    <div class="alert alert-success" role="alert">
+      {{ alert['success'] }}
+    </div>
+    {% endif %}
+    {% if alert['danger'] %}
+    <div class="alert alert-danger" role="alert">
+      {{ alert['danger'] }}
+    </div>
+    {% endif %}
+    {% if alert['warning'] %}
+    <div class="alert alert-warning" role="alert">
+      {{ alert['warning'] }}
+    </div>
+    {% endif %}
+
+  </main>
+  <footer class="fixed-bottom" style="background-color: #8b89899a;">
+    <div class="container">
+      <span class="text-muted">
+        <p>Mysafeip is an opensource project.
+          New to Mysafeip? <a href="https://github.com/yvguim/mysafeip">Visit our github homepage</a></p>
+      </span>
+    </div>
+    <script src="/static/jquery.min-1.12.4.js"></script>
+    <script src="/static/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

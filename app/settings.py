@@ -16,5 +16,6 @@ class Settings(BaseSettings):
     ALGORITHM: str = os.getenv('ALGORITHM')
     ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
     SQLALCHEMY_DATABASE_URI: str = os.getenv('SQLALCHEMY_DATABASE_URI')
+    URL_WEBSITE: str = os.getenv('URL_WEBSITE')
 
 settings = Settings()

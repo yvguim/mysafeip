@@ -13,6 +13,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
     ips = relationship("Ip", back_populates="owner", cascade="all, delete-orphan")
+    instantaccess = relationship("InstantAccess", back_populates="owner", cascade="all, delete-orphan")
 
 
 class Ip(Base):
@@ -24,3 +25,14 @@ class Ip(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="ips")
+
+class InstantAccess(Base):
+    __tablename__ = "instantaccess"
+
+    id = Column(Integer, primary_key=True, index=True)
+    link = Column(String, index=True)
+    unique_link = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    owner = relationship("User", back_populates="instantaccess")
+

@@ -17,7 +17,7 @@ import models
 import schemas
 from settings import settings
 from database import engine, get_db
-from routers import users, ips
+from routers import users, ips, instant_access
 
 #Init database and tables if not exists
 models.Base.metadata.create_all(bind=engine)
@@ -28,6 +28,7 @@ app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 #Include routers
 app.include_router(users.router)
 app.include_router(ips.router)
+app.include_router(instant_access.router)
 
 
 #Mount static directory files and jinja files

@@ -1,0 +1,46 @@
+{%extends "layout.html" %}
+
+{% block content %}
+<div class="text-center mt-5">
+  <form style="max-width:480px;margin:auto;" method="POST">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Declare a new link</h1>
+    </div>
+    <input hidden=true name="action" value="create">
+    <input type="link" id="link" class="form-control mb-1" name="link" value="{{ link }}"
+      placeholder="link" required autofocus>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create a new instant link</button>
+  </form>
+</div>
+
+
+{% if links %}
+<div class="container">
+  <div class="table-responsive">
+  <table class="table table-striped caption-top">
+    <caption>List of instant access links</caption>
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Url destination</th>
+        <th scope="col">Instant access link</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lk in links %}
+      <tr>
+        <th scope="row">{{ lk.id }}</th>
+        <td>{{ lk.link}}</td>
+        <td><a href="{{ url_website }}/instant-access/ia/{{ lk.unique_link }}">{{ url_website }}/instant-access/ia/{{ lk.unique_link }}</a></td>
+        <td>{{ lk.description }}</td>
+        <td><form method="POST"><input hidden=true name="action" value="delete"><input hidden=true name="link" value="{{ lk.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+{% endif %}
+
+{% endblock %}

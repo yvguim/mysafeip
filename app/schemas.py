@@ -1,17 +1,30 @@
 from typing import Union, Optional
 
-from pydantic import BaseModel, IPvAnyAddress, EmailStr
+from pydantic import BaseModel, IPvAnyAddress, EmailStr, AnyUrl
+
+class InstantAccess(BaseModel):
+    id: Optional[int]
+    owner_id: Optional[int]
+    link: AnyUrl
+    unique_link: str = None
+    description: Union[str, None] = None
+    class Config:
+        orm_mode = True
+
+class InstantAccessCreate(InstantAccess):
+    pass
 
 class Ip(BaseModel):
-    id: int
+    id: Optional[int]
     owner_id: Optional[int]
-    value: Optional[IPvAnyAddress] = None
+    value: IPvAnyAddress
     description: Union[str, None] = None
     class Config:
         orm_mode = True
 
 class IpCreate(Ip):
     pass
+    
 
 class User(BaseModel):
     is_active: Optional[bool] = True
