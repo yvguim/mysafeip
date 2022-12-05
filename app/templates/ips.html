@@ -11,6 +11,7 @@
         <th scope="col">#</th>
         <th scope="col">User</th>
         <th scope="col">IP</th>
+        <th scope="col">Origin</th>
         <th scope="col">Description</th>
       </tr>
     </thead>
@@ -20,6 +21,7 @@
         <th scope="row">{{ ip.id }}</th>
         <td>{{ ip.owner.email }}</td>
         <td>{{ ip.value }}</td>
+        <td>{{ ip.origin }}</td>
         <td>{{ ip.description }}</td>
         <td><form method="POST"> <input hidden=true name="ip" value="{{ ip.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
       </tr>

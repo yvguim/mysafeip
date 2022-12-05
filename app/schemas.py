@@ -19,6 +19,7 @@ class Ip(BaseModel):
     owner_id: Optional[int]
     value: IPvAnyAddress
     description: Union[str, None] = None
+    origin: str = None
     class Config:
         orm_mode = True
 

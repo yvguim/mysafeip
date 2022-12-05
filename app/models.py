@@ -23,7 +23,7 @@ class Ip(Base):
     value = Column(String, index=True)
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
-
+    origin = Column(String, index=True)
     owner = relationship("User", back_populates="ips")
 
 class InstantAccess(Base):
@@ -33,6 +33,5 @@ class InstantAccess(Base):
     link = Column(String, index=True)
     unique_link = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
-
     owner = relationship("User", back_populates="instantaccess")
 

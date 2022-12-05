@@ -49,27 +49,25 @@ def get_ip(db: Session, ip_id: int):
     return db.query(Ip).get(ip_id)
 
 def delete_ip(db: Session, id):
-    print(id)
     db_ip = get_ip(db, id)
-    print(db_ip)
     if not db_ip:
         return False
     db.delete(db_ip)
     db.commit()
     return True
 
-def get_ip_for_user(db: Session, user_id: int, ip, description):
-    return db.query(Ip).filter(Ip.owner_id == user_id, Ip.value == ip, Ip.description == description).first()
+def get_ip_for_user(db: Session, user_id: int, ip, origin, description):
+    return db.query(Ip).filter(Ip.owner_id == user_id, Ip.value == ip, Ip.origin == origin, Ip.description == description).first()
 
-def create_user_ip(db: Session, user_id: int, ip, description = ""):
+def create_user_ip(db: Session, user_id: int, ip, origin = "", description = ""):
     print(user_id)
     print(ip)
-    ip_exists = get_ip_for_user(db, user_id = user_id, ip = ip, description = description)
+    ip_exists = get_ip_for_user(db, user_id = user_id, ip = ip, origin = origin, description = description)
     print(ip)
     if not ip_exists:
-        ip = IpCreate(description=description, value=ip, owner_id=user_id)
+        ip = IpCreate(description=description, value=ip, origin=origin, owner_id=user_id)
         ip_data = ip.dict()
-        db_ip = Ip(description=ip_data['description'], value=str(ip_data['value']), owner_id=ip_data['owner_id'])
+        db_ip = Ip(description=ip_data['description'], value=str(ip_data['value']), origin=str(ip_data['origin']), owner_id=ip_data['owner_id'])
         db.add(db_ip)
         db.commit()
         db.refresh(db_ip)
@@ -102,6 +100,13 @@ def delete_link(db: Session, id):
     print(db_link)
     if not db_link:
         return False
+    origin = db_link.unique_link
+    print("origin")
+    print(origin)
+    ips_to_delete = db.query(Ip).filter(Ip.origin == origin).all()
+    print(ips_to_delete)
+    for ip in ips_to_delete:
+        delete_ip(db, ip.id)
     db.delete(db_link)
     db.commit()
     return True
