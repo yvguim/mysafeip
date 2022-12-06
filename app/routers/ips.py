@@ -44,7 +44,7 @@ current_user: models.User = Depends(get_current_user)):
     if ip == '':
         ip = request.client.host
         
-    ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip)
+    ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip, origin = "Created Manually")
     if ip_created:
         alert["success"] = str(ip_created.value) + " is now trusted"
     response = templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
