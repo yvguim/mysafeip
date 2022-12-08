@@ -7,7 +7,7 @@
         <h1 class="jumbotron-heading" style="margin-top:2em;">Welcome back {{ user.email }}</h1>
         <p class="lead text-muted mt-2">You come from <b>{{ client_host }}</b> yet.</p>
         <p style="margin-top:2em;margin-bottom:3em;">
-            <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
+            <a href="/ips/ip" class="btn btn-primary my-2">Add/delete a safe IP</a>
             {% if user.is_admin %}
             <a href="/users/read" class="btn btn-success my-2">Users</a>
             {% else %}

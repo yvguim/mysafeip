@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 import security
 from schemas import UserCreate, IpCreate, InstantAccessCreate
 from models import User, Ip, InstantAccess
+from pydantic import IPvAnyAddress
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -57,13 +58,11 @@ def delete_ip(db: Session, id):
     return True
 
 def get_ip_for_user(db: Session, user_id: int, ip, origin, description):
-    return db.query(Ip).filter(Ip.owner_id == user_id, Ip.value == ip, Ip.origin == origin, Ip.description == description).first()
+    return db.query(Ip).filter(Ip.owner_id == user_id, Ip.value == ip.strip(), Ip.origin == origin, Ip.description == description).first()
 
 def create_user_ip(db: Session, user_id: int, ip, origin = "", description = ""):
-    print(user_id)
-    print(ip)
     ip_exists = get_ip_for_user(db, user_id = user_id, ip = ip, origin = origin, description = description)
-    print(ip)
+    print(ip_exists)
     if not ip_exists:
         ip = IpCreate(description=description, value=ip, origin=origin, owner_id=user_id)
         ip_data = ip.dict()
@@ -73,13 +72,15 @@ def create_user_ip(db: Session, user_id: int, ip, origin = "", description = "")
         db.refresh(db_ip)
         return db_ip
     return ip_exists
-
     
-def create_instant_access(db: Session, link: str, user_id: int):
+def create_instant_access(db: Session, link: str, user_id: int, description = ""):
     unique_link = secrets.token_hex(16)
-    ia = InstantAccessCreate(link=link, unique_link=unique_link, owner_id=user_id)
+    print("!!!!!!!!!!!!!")
+    print(description)
+    ia = InstantAccessCreate(link=link, unique_link=unique_link, owner_id=user_id, description=description)
     ia_data = ia.dict()
-    db_ia = InstantAccess(link=str(ia_data['link']), unique_link=ia_data['unique_link'], owner_id=ia_data['owner_id'])
+    print(ia_data)
+    db_ia = InstantAccess(description=ia_data['description'], link=str(ia_data['link']), unique_link=ia_data['unique_link'], owner_id=ia_data['owner_id'])
     db.add(db_ia)
     db.commit()
     db.refresh(db_ia)
@@ -89,7 +90,10 @@ def get_link(db: Session, link_id: int):
     return db.query(InstantAccess).get(link_id)
 
 def get_links(db: Session, user):
-    return db.query(InstantAccess).filter(InstantAccess.owner == user)
+    if user.is_admin:
+        return db.query(InstantAccess).all()
+    else:
+        return db.query(InstantAccess).filter(InstantAccess.owner == user)
 
 def get_link_by_unique_link(db: Session, unique_link: str):
     return db.query(InstantAccess).filter(InstantAccess.unique_link == unique_link).first()

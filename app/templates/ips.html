@@ -1,6 +1,20 @@
 {%extends "layout.html" %}
 
 {% block content %}
+<div class="text-center mt-5">
+  <form style="max-width:480px;margin:auto;" method="POST">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Declare a trusted Ip: </h1>
+    </div>
+    <input hidden=true name="action" value="create">
+    <input type="ip" id="inputIp" class="form-control mb-1" name="ip" value="{{ ip }}"
+      placeholder="ip" required autofocus>
+    <input type="description" class="form-control mb-1" name="description" value="{{ description }}"
+      placeholder="A usefull description" autofocus>
+    <button class="btn btn-m btn-primary btn-block" type="submit">Trust me!</button>
+  </form>
+</div>
+
 {% if ips %}
 <div class="container">
   <div class="table-responsive">
@@ -23,7 +37,7 @@
         <td>{{ ip.value }}</td>
         <td>{{ ip.origin }}</td>
         <td>{{ ip.description }}</td>
-        <td><form method="POST"> <input hidden=true name="ip" value="{{ ip.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
+        <td><form method="POST"><input hidden=true name="action" value="delete"><input hidden=true name="ip_id" value="{{ ip.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
       </tr>
       {% endfor %}
     </tbody>

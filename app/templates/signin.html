@@ -7,9 +7,9 @@
     <h1 class="jumbotron-heading">Authenticated</h1>
     <p class="lead text-muted">You are now logged {{ user.email }} ;)</p>
     <p>
-      <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
+      <a href="/ips/config" class="btn btn-primary my-2">Add/delete a safe IP</a>
       {% if user.is_admin %}
-      <a href="/ips/get_ips" class="btn btn-success my-2">Review user's Ips</a>
+      <a href="/instant-access/config" class="btn btn-success my-2">Add/delete an instant access link</a>
       {% endif %}
     </p>
   </div>
@@ -25,7 +25,7 @@
       placeholder="Email address" required autofocus>
     <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
       placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-m btn-primary btn-block" type="submit">Sign in</button>
   </form>
 </div>
 

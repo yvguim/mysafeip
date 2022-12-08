@@ -25,34 +25,8 @@ router = APIRouter(
 router.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/create_ip/", response_model=schemas.Ip)
-def get_create_ip(request: Request,
-current_user: models.User = Depends(get_current_user)):
-    """declare one ip"""
-    
-    ip = request.client.host
-    return templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
-
-
-@router.post("/create_ip/", response_model=schemas.Ip)
-def post_create_ip(request: Request,
-ip: str = Form(""),
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """declare one ip"""
-    
-    if ip == '':
-        ip = request.client.host
-        
-    ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip, origin = "Created Manually")
-    if ip_created:
-        alert["success"] = str(ip_created.value) + " is now trusted"
-    response = templates.TemplateResponse("create_ip.html", {"request": request, "user": current_user, "ip": ip, "alert": alert})
-    return response
-
-
-@router.get("/get_ips/")
-def read_ips(
+@router.get("/config/")
+def list_ips(
 request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
@@ -63,25 +37,41 @@ current_user: models.User = Depends(get_current_user)):
     if request.headers.get('Cli'):
         ip_list = [{"owner": ip.owner.email, "value": ip.value,"description": ip.description} for ip in ips]
         return ip_list
-
-    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
+    
+    ip = request.client.host
+    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "alert": alert})
     return response
 
-@router.post("/get_ips/")
-def delete_ips(request: Request,
-ip: str = Form(),
+@router.post("/config/", response_model=schemas.InstantAccess)
+def post_ips(request: Request,
+ip: str = Form(""),
+ip_id: str = Form(""),
+description: str = Form(""),
+action: str = Form(""),
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
-    """read and return all users"""
+    """declare or delete a safe ip"""
+    alert = {"success": "","danger": "","warning": ""}
+    print(action)
+    if action == 'delete':
+        if crud.delete_ip(db, ip_id):
+            alert["success"] = "ip deleted successfully"
+        else:
+            alert["warning"] = "An error occured while deleting ip"
+        ip = request.client.host
 
-    if crud.delete_ip(db, ip):
-        alert["success"] = "ip deleted successfully"
-    else:
-        alert["warning"] = "An error occured while deleting ip"
-    ips = crud.get_ips(db, current_user)
-    
-    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
+ 
+    if action == 'create':
+        if ip == '':
+            ip = request.client.host
+        
+        ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip, origin = "Created Manually", description=description)
+        if ip_created:
+            alert["success"] = str(ip_created.value) + " is now trusted"
 
+    ips = crud.get_ips(db, user = current_user)
+    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "alert": alert})
     return response
+
 
 

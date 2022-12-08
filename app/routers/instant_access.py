@@ -28,14 +28,37 @@ router = APIRouter(
 router.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/create-instant-access/")
+@router.get("/config/")
 def get_create_instant_access(request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """Create an instant access link to share with others"""
     alert = {"success": "","danger": "","warning": ""}
     links = crud.get_links(db, user = current_user)
-    return templates.TemplateResponse("create_instant_access.html", {"request": request, "user": current_user, "link": "https://your_secure_url", "url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
+    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://your_secure_url", "url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
+
+@router.post("/config/", response_model=schemas.InstantAccess)
+def post_instant_access(request: Request,
+link: str = Form(""),
+description: str = Form(""),
+action: str = Form(""),
+db: Session = Depends(get_db),
+current_user: models.User = Depends(get_current_user)):
+    """declare a new link"""
+    alert = {"success": "","danger": "","warning": ""}
+    print(action)
+    if action == 'delete':
+        if crud.delete_link(db, link):
+            alert["success"] = "Instant link deleted successfully"
+        else:
+            alert["warning"] = "An error occured while deleting Instant link"
+
+    if action == 'create':
+        link_created = crud.create_instant_access(db=db, link=link, user_id=current_user.id, description=description)
+        if link_created:
+            alert["success"] = str(link_created.link) + " is now accessible directly from " + str(link_created.unique_link)
+    links = crud.get_links(db, user = current_user)
+    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://destination_url","url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
 
 @router.get("/ia/{unique_link}")
 async def get_link_redirect(request: Request,
@@ -62,44 +85,3 @@ db: Session = Depends(get_db),
     return templates.TemplateResponse(
         "redirect.html",
         {"request": request, "link": destination_link.link, "alert": alert})
-
-@router.post("/create-instant-access/", response_model=schemas.InstantAccess)
-def post_instant_access(request: Request,
-link: str = Form(""),
-action: str = Form(""),
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """declare a new link"""
-    alert = {"success": "","danger": "","warning": ""}
-    print(action)
-    if action == 'delete':
-        if crud.delete_link(db, link):
-            alert["success"] = "Instant link deleted successfully"
-        else:
-            alert["warning"] = "An error occured while deleting Instant link"
-
-    if action == 'create':
-        link_created = crud.create_instant_access(db=db, link=link, user_id=current_user.id)
-        if link_created:
-            alert["success"] = str(link_created.link) + " is now accessible directly from " + str(link_created.unique_link)
-    links = crud.get_links(db, user = current_user)
-    return templates.TemplateResponse("create_instant_access.html", {"request": request, "user": current_user, "link": "https://destination_url","url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
-
-#
-#@router.get("/instant-access/")
-#def instant_access(
-#request: Request,
-#db: Session = Depends(get_db),
-#unique_link: str = ''):
-#    """check and redirect unique link"""
-#    instant_access = crud.get_instant_access(db, unique_link = unique_link)
-#
-#    if instant_access:
-#        ip = request.client.host
-#        #add ip trusted
-#        message  = "Click here if you are not redireted in 5 secondes"
-#
-#    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "alert": alert})
-#    return response
-
-
