@@ -95,7 +95,7 @@ db: Session = Depends(get_db),
     owner_id = destination_link.owner_id
     ip = request.client.host
     crud.create_user_ip(db=db, user_id=owner_id, ip=ip, origin=unique_link, description="Added by instant_access")
-    alert["success"] = "We are allowing you ip: " + str(ip) +". You will be redirected to " + destination_link.link +" in 10 seconds"
+    alert["success"] = languages[language]['We-are-allowing-your-ip']+": " + str(ip) +". "+ languages[language]['You-will-be-redirected-to'] + " " + destination_link.link + " " + languages[language]['in-10-seconds']
     
     return templates.TemplateResponse(
         "redirect.html",

@@ -51,6 +51,10 @@
     "Registering": "registering",
     "Email-address": "Email address",
     "Password": "Password",
-    "Confirm-password": "Confirm password"
+    "Confirm-password": "Confirm password",
+    "We-are-allowing-your-ip": "We are allowing your ip",
+    "You-will-be-redirected-to": "You will be redirected to",
+    "in-10-seconds": "in 10 seconds"
+
 
 }

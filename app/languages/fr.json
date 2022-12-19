@@ -51,7 +51,10 @@
     "Registering": "enregistrer",
     "Email-address": "Adresse email",
     "Password": "Mot de passe",
-    "Confirm-password": "Confirmez votre mot de passe"
+    "Confirm-password": "Confirmez votre mot de passe",
+    "We-are-allowing-your-ip": "Nous autorisons votre ip",
+    "You-will-be-redirected-to": "Vous serez redirigé",
+    "in-10-seconds": "dans 10 secondes"
 
     
 }
