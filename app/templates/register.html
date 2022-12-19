@@ -5,10 +5,10 @@
 {% if user.email %}
 <section class="jumbotron text-center">
   <div class="container">
-    <h1 class="jumbotron-heading">Authenticated</h1>
-    <p class="lead text-muted">You are logged as {{ user.email }}</p>
+    <h1 class="jumbotron-heading">{{ language['Authenticated'] }}</h1>
+    <p class="lead text-muted">{{ language['Your-know-logged-as'] }} {{ user.email }}</p>
     <p>
-      <a href="/ips/create_ip" class="btn btn-primary my-2">Add your IP</a>
+      <a href="/ips/create_ip" class="btn btn-primary my-2">{{ language['Declare-trust-ip'] }}</a>
     </p>
   </div>
 </section>
@@ -19,12 +19,12 @@
       <h1 class="h3 mb-3 font-weight-normal">Register</h1>
     </div>
     <input type="email" id="inputEmail" class="form-control mb-1" name="email" value="{{email}}"
-      placeholder="Email address" required autofocus>
+      placeholder="{{ language['Email-address'] }}" required autofocus>
     <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
-      placeholder="Password" required>
+      placeholder="{{ language['Password'] }}" required>
     <input type="password" id="inputPassword" class="form-control mb-3" name="confirm_password" value="{{confirm_password}}"
-      placeholder="Confirm your password" required>
-    <button class="btn btn-m btn-primary btn-block" type="submit">Register</button>
+      placeholder="{{ language['Confirm-password'] }}" required>
+    <button class="btn btn-m btn-primary btn-block" type="submit">{{ language['Register'] }}</button>
   </form>
 </div>
 

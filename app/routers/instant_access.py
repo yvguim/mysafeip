@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from fastapi import Depends, HTTPException, Request, Form
 
-from auth import get_current_user, check_user
+from auth import get_current_user, check_user, check_user_language
 import crud
 import models
 import schemas
@@ -14,8 +14,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 
 from settings import settings
-
-
+import json
+import glob
+import os
 
 router = APIRouter(
     prefix="/instant-access",
@@ -28,17 +29,29 @@ router = APIRouter(
 router.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+#trans
+app_language = 'en'
+languages = {}
+language_list = glob.glob("languages/*.json")
+for lang in language_list:
+    filename  = os.path.basename(lang)
+    lang_code, ext = os.path.splitext(filename)
+
+    with open(lang, 'r', encoding='utf8') as file:
+        languages[lang_code] = json.load(file)
+
 @router.get("/config/")
-def get_create_instant_access(request: Request,
+async def get_create_instant_access(request: Request,
 db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """Create an instant access link to share with others"""
     alert = {"success": "","danger": "","warning": ""}
+    language = await check_user_language(request)
     links = crud.get_links(db, user = current_user)
-    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://your_secure_url", "url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
+    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://your_secure_url", "url_website": settings.URL_WEBSITE, "links": links, "alert": alert, "language": languages[language]})
 
 @router.post("/config/", response_model=schemas.InstantAccess)
-def post_instant_access(request: Request,
+async def post_instant_access(request: Request,
 link: str = Form(""),
 description: str = Form(""),
 action: str = Form(""),
@@ -46,6 +59,7 @@ db: Session = Depends(get_db),
 current_user: models.User = Depends(get_current_user)):
     """declare a new link"""
     alert = {"success": "","danger": "","warning": ""}
+    language = await check_user_language(request)
     print(action)
     if action == 'delete':
         if crud.delete_link(db, link):
@@ -58,7 +72,7 @@ current_user: models.User = Depends(get_current_user)):
         if link_created:
             alert["success"] = str(link_created.link) + " is now accessible directly from " + str(link_created.unique_link)
     links = crud.get_links(db, user = current_user)
-    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://destination_url","url_website": settings.URL_WEBSITE, "links": links, "alert": alert})
+    return templates.TemplateResponse("instant_access.html", {"request": request, "user": current_user, "link": "https://destination_url","url_website": settings.URL_WEBSITE, "links": links, "alert": alert, "language": languages[language]})
 
 @router.get("/ia/{unique_link}")
 async def get_link_redirect(request: Request,
@@ -67,6 +81,7 @@ db: Session = Depends(get_db),
 ):
     """Create an instant access link to share with others"""
     alert = {"success": "","danger": "","warning": ""}
+    language = await check_user_language(request)
     destination_link = crud.get_link_by_unique_link(db, unique_link = unique_link)
 
     if not destination_link:
@@ -84,4 +99,4 @@ db: Session = Depends(get_db),
     
     return templates.TemplateResponse(
         "redirect.html",
-        {"request": request, "link": destination_link.link, "alert": alert})
+        {"request": request, "link": destination_link.link, "alert": alert, "language": languages[language]})

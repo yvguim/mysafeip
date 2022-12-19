@@ -4,14 +4,14 @@
 <div class="text-center mt-5">
   <form style="max-width:480px;margin:auto;" method="POST">
     <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Declare a new link</h1>
+      <h1 class="h3 mb-3 font-weight-normal">{{ language['Declare-a-new-link'] }} </h1>
     </div>
     <input hidden=true name="action" value="create">
     <input type="link" id="link" class="form-control mb-1" name="link" value="{{ link }}"
       placeholder="link" required autofocus>
       <input type="description" class="form-control mb-1" name="description" value="{{ description }}"
-      placeholder="A usefull description" autofocus>
-      <button class="btn btn-m btn-primary btn-block" type="submit">Create a new instant link</button>
+      placeholder="{{ language['usefull-description'] }}" autofocus>
+      <button class="btn btn-m btn-primary btn-block" type="submit">{{ language['Create-new-instant-link'] }}</button>
   </form>
 </div>
 
@@ -19,25 +19,23 @@
 <div class="container">
   <div class="table-responsive">
   <table class="table table-striped caption-top">
-    <caption>List of instant access links</caption>
+    <caption>{{ language['List-of-instant-access-links'] }}</caption>
     <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">User</th>
-        <th scope="col">Url destination</th>
-        <th scope="col">Instant access link</th>
-        <th scope="col">Description</th>
+        <th scope="col">{{ language['User'] }}</th>
+        <th scope="col">{{ language['Destination-url'] }}</th>
+        <th scope="col">{{ language['Instant-access-link'] }}</th>
+        <th scope="col">{{ language['Description'] }}</th>
       </tr>
     </thead>
     <tbody>
       {% for lk in links %}
       <tr>
-        <th scope="row">{{ lk.id }}</th>
         <td>{{ lk.owner.email}}</td>
         <td>{{ lk.link}}</td>
         <td><a href="{{ url_website }}/instant-access/ia/{{ lk.unique_link }}">{{ url_website }}/instant-access/ia/{{ lk.unique_link }}</a></td>
         <td>{{ lk.description }}</td>
-        <td><form method="POST"><input hidden=true name="action" value="delete"><input hidden=true name="link" value="{{ lk.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">Delete</button></form></td>
+        <td><form method="POST"><input hidden=true name="action" value="delete"><input hidden=true name="link" value="{{ lk.id }}"><button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Delete'] }}Delete</button></form></td>
       </tr>
       {% endfor %}
     </tbody>

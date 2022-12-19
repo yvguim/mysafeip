@@ -4,14 +4,14 @@
 <div class="text-center mt-5">
   <form style="max-width:480px;margin:auto;" method="POST">
     <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Declare a trusted Ip: </h1>
+      <h1 class="h3 mb-3 font-weight-normal">{{ language['Declare-trust-ip'] }}: </h1>
     </div>
     <input hidden=true name="action" value="create">
     <input type="ip" id="inputIp" class="form-control mb-1" name="ip" value="{{ ip }}"
       placeholder="ip" required autofocus>
     <input type="description" class="form-control mb-1" name="description" value="{{ description }}"
-      placeholder="A usefull description" autofocus>
-    <button class="btn btn-m btn-primary btn-block" type="submit">Trust me!</button>
+      placeholder="{{ language['usefull-description'] }}" autofocus>
+    <button class="btn btn-m btn-primary btn-block" type="submit">{{ language['Trust-me'] }}</button>
   </form>
 </div>
 
@@ -19,20 +19,18 @@
 <div class="container">
   <div class="table-responsive">
   <table class="table table-striped caption-top">
-    <caption>List of Ips</caption>
+    <caption>{{ language['List-of-Ips'] }}</caption>
     <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">User</th>
-        <th scope="col">IP</th>
-        <th scope="col">Origin</th>
-        <th scope="col">Description</th>
+        <th scope="col">{{ language['User'] }}</th>
+        <th scope="col">{{ language['IP'] }}</th>
+        <th scope="col">{{ language['Origin'] }}</th>
+        <th scope="col">{{ language['Description'] }}</th>
       </tr>
     </thead>
     <tbody>
       {% for ip in ips %}
       <tr>
-        <th scope="row">{{ ip.id }}</th>
         <td>{{ ip.owner.email }}</td>
         <td>{{ ip.value }}</td>
         <td>{{ ip.origin }}</td>

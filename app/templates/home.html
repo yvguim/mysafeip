@@ -4,24 +4,24 @@
 <section class="jumbotron text-center">
     <div class="container">
         {% if user.email %}
-        <h1 class="jumbotron-heading" style="margin-top:2em;">Welcome back {{ user.email }}</h1>
-        <p class="lead text-muted mt-2">You come from <b>{{ client_host }}</b> yet.</p>
+        <h1 class="jumbotron-heading" style="margin-top:2em;">{{ language['Welcome'] }} {{ user.email }}</h1>
+        <p class="lead text-muted mt-2">{{ language['Here-is-your-IP'] }} <b>{{ client_host }}</b>.</p>
         <p style="margin-top:2em;margin-bottom:3em;">
-            <a href="/ips/ip" class="btn btn-primary my-2">Add/delete a safe IP</a>
+            <a href="/ips/config" class="btn btn-primary my-2">{{ language['Add-delete-safe-ip'] }}</a>
             {% if user.is_admin %}
-            <a href="/users/read" class="btn btn-success my-2">Users</a>
+            <a href="/users/read" class="btn btn-success my-2">{{ language['Users'] }}</a>
             {% else %}
-            <a href="/users/details/{{ user.id }}" class="btn btn-success my-2">My account</a>
+            <a href="/users/details/{{ user.id }}" class="btn btn-success my-2">{{ language['My-account'] }}</a>
             {% endif %}
         </p>
         {% else %}
-        <h1 class="jumbotron-heading" style="margin-top:1em;margin-bottom:1em;">Welcome on Mysafeip</h1>
+        <h1 class="jumbotron-heading" style="margin-top:1em;margin-bottom:1em;">{{ language['Welcome'] }}</h1>
 
-        <h2 class="jumbotron-heading" style="margin-top:1em;margin-bottom:3em;">Here is your IP: {{ client_host }}</h2>
-        <p class="lead text-muted"> You are not authenticated. Consider login or register ;)</p>
+        <h2 class="jumbotron-heading" style="margin-top:1em;margin-bottom:1em;">{{ language['Here-is-your-IP'] }}: {{ client_host }}</h2>
+        <p class="lead text-muted"> {{ language['consider-login-register'] }}</p>
         <p>
-            <a href="/signin" class="btn btn-primary my-2">Login</a>
-            <a href="/register" class="btn btn-primary my-2">Register</a>
+            <a href="/signin" class="btn btn-primary my-2">{{ language['Login'] }}</a>
+            <a href="/register" class="btn btn-primary my-2">{{ language['Register'] }}</a>
         </p>
         {% endif %}
     </div>
@@ -35,8 +35,7 @@
                     <div class="card-body">
 
                         <img class="d-inline-block align-top" src="/static/firewall.png" width="70" height="70">
-                        <p class="card-text">With Mysafeip, you <b>limit attacks and bot scanning</b> on your
-                            infrastructure by opening <b>firewall rules on the fly</b>.
+                        <p class="card-text">{{ language['arg1'] }}.
                         </p>
                     </div>
                 </div>
@@ -45,7 +44,7 @@
                 <div class="card mb-6 box-shadow" style="height:12em;">
                     <div class="card-body">
                         <img class="d-inline-block align-top" src="/static/api.png" width="70" height="70">
-                        <p class="card-text">Mysafeip offers a <b>web interface and APIs</b> to interact directly.</p>
+                        <p class="card-text">{{ language['arg2'] }}.</p>
                     </div>
                 </div>
             </div>
@@ -53,8 +52,7 @@
                 <div class="card mb-6 box-shadow" style="height:12em;">
                     <div class="card-body">
                         <img class="d-inline-block align-top" src="/static/python.png" width="70" height="70">
-                        <p class="card-text">Mysafeip is an opensource project build on top of <b>Python</b>,
-                            <b>Fastapi</b> and <b>Bootstrap</b>.</p>
+                        <p class="card-text">{{ language['arg3'] }}.</p>
                     </div>
                 </div>
             </div>

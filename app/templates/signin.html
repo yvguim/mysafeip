@@ -4,12 +4,12 @@
 {% if user.email %}
 <section class="jumbotron text-center">
   <div class="container">
-    <h1 class="jumbotron-heading">Authenticated</h1>
-    <p class="lead text-muted">You are now logged {{ user.email }} ;)</p>
+    <h1 class="jumbotron-heading">{{ language['Authenticated'] }}</h1>
+    <p class="lead text-muted">{{ language['Your-know-logged-as'] }} {{ user.email }} ;)</p>
     <p>
-      <a href="/ips/config" class="btn btn-primary my-2">Add/delete a safe IP</a>
+      <a href="/ips/config" class="btn btn-primary my-2">{{ language['Declare-trust-ip'] }}</a>
       {% if user.is_admin %}
-      <a href="/instant-access/config" class="btn btn-success my-2">Add/delete an instant access link</a>
+      <a href="/instant-access/config" class="btn btn-success my-2">{{ language['Create-new-instant-link'] }}</a>
       {% endif %}
     </p>
   </div>
@@ -18,14 +18,14 @@
 <div class="text-center mt-5">
   <form style="max-width:480px;margin:auto;" method="POST">
     <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-      <p>If you haven't signed up yet, consider <a href="/register">registering</a>.
+      <h1 class="h3 mb-3 font-weight-normal">{{ language['Login'] }}</h1>
+      <p>{{ language['Register-help'] }} <a href="/register">{{ language['Registering'] }}</a>.
     </div>
     <input type="email" id="inputEmail" class="form-control mb-1" name="username" value="{{username}}"
-      placeholder="Email address" required autofocus>
+      placeholder="{{ language['Email-address'] }}" required autofocus>
     <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
-      placeholder="Password" required>
-    <button class="btn btn-m btn-primary btn-block" type="submit">Sign in</button>
+      placeholder="{{ language['Password'] }}" required>
+    <button class="btn btn-m btn-primary btn-block" type="submit">{{ language['Login'] }}</button>
   </form>
 </div>
 

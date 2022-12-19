@@ -5,29 +5,27 @@
 <div class="container">
   <div class="table-responsive">
     <table class="table table-striped caption-top">
-      <caption>List of Users</caption>
+      <caption>{{ language['List-of-users'] }}</caption>
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Email</th>
-          <th scope="col">Administrator</th>
-          <th scope="col">Delete account</th>
-          <th scope="col">Reset password</th>
+          <th scope="col">{{ language['Email'] }}</th>
+          <th scope="col">{{ language['Administrator'] }}</th>
+          <th scope="col">{{ language['Delete-account'] }}</th>
+          <th scope="col">{{ language['Reset-password'] }}</th>
         </tr>
       </thead>
       <tbody>
         {% for u in users %}
         <tr>
-          <th scope="row">{{ u.id }}</th>
           <td>{{ u.email }}</td>
           <td>{{ u.is_admin }}</td>
           <td>
             <form method="POST"> <input hidden=true name="email" value="{{ u.email }}"><button
-                class="btn btn-sm btn-danger btn-block" type="submit">Delete</button></form>
+                class="btn btn-sm btn-danger btn-block" type="submit">{{ language['Delete-account'] }}</button></form>
           </td>
           <td>
             <form method="GET" action="/users/reset_password/{{ u.id }}"><button
-                class="btn btn-sm btn-primary btn-block" type="submit">Reset password</button></form>
+                class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Reset-password'] }}</button></form>
           </td>
         </tr>
         {% endfor %}

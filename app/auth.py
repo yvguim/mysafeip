@@ -103,9 +103,12 @@ async def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
 ) -> User:
     credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
+        #status_code=status.HTTP_401_UNAUTHORIZED,
+        #detail="Could not validate credentials",
+        #headers={"WWW-Authenticate": "Bearer"},
+        status_code=302,
         detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+        headers = {"Location": "/logout", "Set-Cookie": "access_token=deleted"} 
     )
     try:
         payload = jwt.decode(
@@ -120,6 +123,7 @@ async def get_current_user(
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
+        #return False
 
     user = db.query(User).filter(User.id == token_data.username).first()
     if user is None:
@@ -132,3 +136,10 @@ async def check_user(request: Request, db):
     if token:
         current_user: User = await get_current_user(token=token, db=db)
     return current_user
+
+async def check_user_language(request: Request, lang = None):
+    print(lang)
+    lang = lang or request.cookies.get("lang")
+    if lang and lang in ['en', 'fr']:
+        return lang
+    return "en"
