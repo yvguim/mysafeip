@@ -8,7 +8,6 @@
     "IPs": "IPs",
     "Origin": "Origine",
     "Description": "Description",
-    "My-account": "Mon compte",
     "Logout": "Déconnexion",
     "bottom-text": "Mysafeip est un projet libre. Découvrez le projet ici: ",
     "Welcome" : "Bonjour",
@@ -54,7 +53,23 @@
     "Confirm-password": "Confirmez votre mot de passe",
     "We-are-allowing-your-ip": "Nous autorisons votre ip",
     "You-will-be-redirected-to": "Vous serez redirigé",
-    "in-10-seconds": "dans 10 secondes"
+    "in-10-seconds": "dans 10 secondes",
+    "Reset-password-of": "Réinitialiser le mot de passe de",
+    "Reset": "Réinitialiser",
+    "My-account": "Mon compte",
+    "Your-mail-address-is": "Votre adresse email est",
+    "Your-role-is": "Votre rôle est",
+    "administrator": "administrateur",
+    "normal-user": "utilisateur normal",
+    "Activate-2FA-authentication": "Activer l'authentification deux facteurs",
+    "Save": "Enregistrer",
+    "2fa-secret": "Code OTP",
+    "Incorrect-totp": "Code OTP incorrect",
+    "enter-otp-or-leave-empty": "Entrez votre code OTP ou laissez vide",
+    "Consider-two-factor": "Vous devriez activer la double authentification",
+    "twofactor-advice": "Le secret associé au code OTP ne sera affiché qu'une fois, sauvegardez le précieusement!"
+
+
 
     
 }

@@ -17,10 +17,10 @@
       <tbody>
         {% for u in users %}
         <tr>
-          <td>{{ u.email }}</td>
+          <td><a href="/users/details/{{ u.id }}">{{ u.email }}</a></td>
           <td>{{ u.is_admin }}</td>
           <td>
-            <form method="POST"> <input hidden=true name="email" value="{{ u.email }}"><button
+            <form method="POST"><input hidden=true name="email" value="{{ u.email }}"><button
                 class="btn btn-sm btn-danger btn-block" type="submit">{{ language['Delete-account'] }}</button></form>
           </td>
           <td>

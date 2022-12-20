@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import security
 from schemas import UserCreate, IpCreate, InstantAccessCreate
 from models import User, Ip, InstantAccess
-from pydantic import IPvAnyAddress
+import pyotp
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -28,6 +28,21 @@ def create_user(db: Session, user: UserCreate):
 def reset_user_password(db: Session, user: User, password: str):
     user = db.query(User).get(user.id)
     user.hashed_password=security.get_password_hash(password)
+    db.commit()
+    db.refresh(user)
+    return user
+
+def enable_user_twofactor(db: Session, user: User):
+    user = db.query(User).get(user.id)
+    user.twofactor = pyotp.random_base32()
+    print(user.twofactor)
+    db.commit()
+    db.refresh(user)
+    return user
+
+def disable_user_twofactor(db: Session, user: User):
+    user = db.query(User).get(user.id)
+    user.twofactor = ""
     db.commit()
     db.refresh(user)
     return user

@@ -8,7 +8,6 @@
     "IPs": "IPs",
     "Origin": "Origin",
     "Description": "Description",
-    "My-account": "My account",
     "Logout": "Logout",
     "bottom-text": "Mysafeip is an opensource project. Check the project here:",
     "Welcome" : "Welcome",
@@ -54,7 +53,21 @@
     "Confirm-password": "Confirm password",
     "We-are-allowing-your-ip": "We are allowing your ip",
     "You-will-be-redirected-to": "You will be redirected to",
-    "in-10-seconds": "in 10 seconds"
+    "in-10-seconds": "in 10 seconds",
+    "Reset-password-of": "Reset password of",
+    "Reset": "Reset",
+    "My-account": "My account",
+    "Your-mail-address-is": "Your mail address is",
+    "Your-role-is": "Your role is",
+    "administrator": "administrator",
+    "normal-user": "normal user",
+    "Activate-2FA-authentication": "Activate two factor authentication",
+    "Save": "Save",
+    "2fa-secret": "Two factor OTP code",
+    "Incorrect-totp": "Incorrect OTP code",
+    "enter-otp-or-leave-empty": "Enter OTP code or leave empty if not used",
+    "Consider-two-factor": "You should enable two factor authentication",
+    "twofactor-advice": "Two factor OTP secret will be shown once, STORE IT CAREFULLY"
 
 
 }

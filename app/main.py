@@ -24,6 +24,8 @@ from routers import users, ips, instant_access
 import glob
 import json
 import os.path
+import pyotp
+from typing import Union
 
 #Init database and tables if not exists
 models.Base.metadata.create_all(bind=engine)
@@ -112,12 +114,13 @@ async def post_signin(
     response: Response,
     request: Request,
     db: Session = Depends(get_db),
+    two_factor_code: str = Form(""),
     form_data: OAuth2PasswordRequestForm = Depends() ):
     """Signin post request"""
     client_host = request.client.host
     alert = {"success": "","danger": "","warning": ""}
     language = await check_user_language(request)
-
+    
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
     
     if not user:
@@ -128,6 +131,17 @@ async def post_signin(
         {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
         return response
 
+    if user.twofactor != "":
+        totp = pyotp.TOTP(user.twofactor)
+        if not totp.verify(two_factor_code):
+            alert["warning"] = languages[language]['Incorrect-totp']
+            user = None
+            response = templates.TemplateResponse(
+            "signin.html",
+            {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+            return response
+
+
     access_token = create_access_token(sub=user.id)
     encoded_token = encoders.jsonable_encoder(access_token)
     
@@ -137,7 +151,6 @@ async def post_signin(
             "access_token": access_token
             }
     alert["success"] = languages[language]['Signin-success']
-
 
     response = templates.TemplateResponse(
         "signin.html",

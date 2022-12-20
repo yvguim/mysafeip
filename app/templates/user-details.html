@@ -1,0 +1,47 @@
+{%extends "layout.html" %}
+
+{% block content %}
+{% if user %}
+<div class="text-center mt-5">
+  <form style="max-width:480px;margin:auto;" method="POST">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">{{ language['My-account'] }}</h1>
+      </h1>
+    </div>
+    <p> {{ language['Your-mail-address-is'] }}: {{ user.email }}</p>
+    {% if user.is_admin %}
+    <p> {{ language['Your-role-is'] }}: {{ language['administrator'] }}</dp>
+    {% else %}
+    <p> {{ language['Your-role-is'] }}: {{ language['normal-user'] }}</p>
+    {% endif %}
+
+
+    <p>
+      <form method="POST">
+      <div class="form-check">
+        {% if user.twofactor %}
+        <input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor" checked>
+        {% else %}
+        <input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor">
+        {% endif %}
+        <label class="form-check-label" for="twofactor">
+          {{ language['Activate-2FA-authentication'] }}
+        </label>
+        <button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button>
+    </form>
+    <p>
+    {% if twofactorurl %}
+    <p>{{ language['twofactor-advice'] }}</p>
+    <p> {{ language['2fa-secret'] }}: {{ user.twofactor }}</p>
+    <script src="/static/qrcode.min.js"></script>
+
+    <div id="qrcode"></div>
+    <script type="text/javascript">
+      new QRCode(document.getElementById("qrcode"), "{{ twofactorurl }}");
+    </script>
+    {% endif %}
+</div>
+
+</div>
+{% endif %}
+{% endblock %}

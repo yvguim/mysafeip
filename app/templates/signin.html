@@ -6,11 +6,10 @@
   <div class="container">
     <h1 class="jumbotron-heading">{{ language['Authenticated'] }}</h1>
     <p class="lead text-muted">{{ language['Your-know-logged-as'] }} {{ user.email }} ;)</p>
+    {% if user.twofactor == "" %}<p class="lead text-muted">{{ language['Consider-two-factor'] }}: <a href="/users/details/{{ user.id }}" class="nav-link">{{ language['My-account'] }}</a> </p>{% endif %}   
     <p>
       <a href="/ips/config" class="btn btn-primary my-2">{{ language['Declare-trust-ip'] }}</a>
-      {% if user.is_admin %}
       <a href="/instant-access/config" class="btn btn-success my-2">{{ language['Create-new-instant-link'] }}</a>
-      {% endif %}
     </p>
   </div>
 </section>
@@ -25,6 +24,8 @@
       placeholder="{{ language['Email-address'] }}" required autofocus>
     <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"
       placeholder="{{ language['Password'] }}" required>
+      <input type="text" id="two_factor_auth" class="form-control mb-3" name="two_factor_code" value="{{twofactor}}"
+      placeholder="{{ language['enter-otp-or-leave-empty'] }}" autocomplete="one-time-code">
     <button class="btn btn-m btn-primary btn-block" type="submit">{{ language['Login'] }}</button>
   </form>
 </div>

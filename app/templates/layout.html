@@ -15,13 +15,12 @@
       <div class="container">
         <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="70"
             height="70">{{ language['website_title'] }}</a>
-        
+        {% if user.email%}
         <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span></button>
-          
+
         <div class="collapse navbar-collapse" id="navbarNav">
-          {% if user.email%}
           <ul class="navbar-nav">
             <li class="nav-item">
               <a href="/ips/config/" class="nav-link">{{ language['safe_ip'] }}</a>
@@ -32,12 +31,11 @@
             {% if user.is_admin %}
             <li class="nav-item">
               <a href="/users/read" class="nav-link">{{ language['Users'] }}</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a href="/users/details/{{ user.id }}" class="nav-link">{{ language['My_account'] }}</a>
-            </li>
+            </li>          
             {% endif %}
+            <li class="nav-item">
+              <a href="/users/details/{{ user.id }}" class="nav-link">{{ language['My-account'] }}</a>
+            </li>
           </ul>
           {% endif %}
         </div>
@@ -84,7 +82,8 @@
   <footer class="fixed-bottom" style="background-color: #8b89899a;">
     <div class="container">
       <span class="text-muted">
-        <p>{{ language['bottom-text'] }}  <a href="https://github.com/yvguim/mysafeip">https://github.com/yvguim/mysafeip</a></p>
+        <p>{{ language['bottom-text'] }} <a
+            href="https://github.com/yvguim/mysafeip">https://github.com/yvguim/mysafeip</a></p>
       </span>
     </div>
     <script src="/static/jquery.min-1.12.4.js"></script>

@@ -14,6 +14,7 @@ from database import get_db
 import glob
 import json
 import os.path
+import pyotp
 
 alert = {"success": "","danger": "","warning": ""}
 
@@ -59,24 +60,6 @@ current_user: models.User = Depends(get_current_user)):
         {"request": request, "users": users, "user": user, "alert": alert, "language": languages[language]})
 
 
-@router.get("/details/{user_id}", response_model=schemas.User)
-async def read_user_details(user_id: int,
-request: Request,
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
-    """search and return one user by id"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
-    if current_user.is_admin:
-        user_details = crud.get_user(db, user_id=user_id)
-    else:
-        user_details = current_user
-    if user_details is None:
-        alert["warning"] = "User does not exist."
-        user_details = None 
-    return templates.TemplateResponse(
-        "user_details.html",
-        {"request": request, "user_details": user_details, "user": current_user, "alert": alert, "language": languages[language]})
 
 @router.post("/read", tags=["users"])
 async def delete_users(request: Request,
@@ -179,3 +162,48 @@ async def post_reset_password(user_id: int,request: Request, current_user: model
         "reset_password.html",
         {"request": request, "alert": alert, "user": user, "language": languages[language]}) 
     return response
+
+
+@router.get("/details/{user_id}", response_model=schemas.User)
+async def user_details(user_id: int,
+request: Request,
+db: Session = Depends(get_db),
+current_user: models.User = Depends(get_current_user)):
+    """search and return one user by id"""
+    alert = {"success": "","danger": "","warning": ""}
+    language = await check_user_language(request)
+    if current_user.is_admin:
+        user = crud.get_user(db, user_id=user_id)
+    else:
+        user = current_user
+    if user is None:
+        alert["warning"] = "User does not exist."
+        user = None 
+    twofactorurl = ""
+
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "alert": alert, "language": languages[language]})
+
+@router.post("/details/{user_id}")
+async def user_details(user_id: int,
+request: Request,
+twofactor: bool = Form(""),
+current_user: models.User = Depends(get_current_user),
+db: Session = Depends(get_db)):
+    """register get request"""
+    alert = {"success": "","danger": "","warning": ""}
+    language = await check_user_language(request)
+    twofactorurl = ""
+
+    if current_user.is_admin:
+        user = crud.get_user(db, user_id=user_id)
+    else:
+        user = current_user
+
+    if twofactor and user.twofactor == "":
+        crud.enable_user_twofactor(db, user)
+        twofactorurl = pyotp.totp.TOTP(user.twofactor).provisioning_uri(name=user.email,issuer_name='MySafeIp')
+
+    if not twofactor and user.twofactor != "":
+        crud.disable_user_twofactor(db, user)
+    
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "alert": alert, "language": languages[language]})

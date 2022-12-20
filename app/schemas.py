@@ -32,6 +32,7 @@ class User(BaseModel):
     ips: list[Ip] = []
     email: EmailStr
     is_admin: Optional[bool] = False
+    twofactor: str = None
     class Config:
         orm_mode = True
 

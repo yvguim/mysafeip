@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from database import Base
 
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -14,6 +15,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     ips = relationship("Ip", back_populates="owner", cascade="all, delete-orphan")
     instantaccess = relationship("InstantAccess", back_populates="owner", cascade="all, delete-orphan")
+    twofactor = Column(String, default="")
 
 
 class Ip(Base):
