@@ -11,36 +11,36 @@
     <p> {{ language['Your-mail-address-is'] }}: {{ user.email }}</p>
     {% if user.is_admin %}
     <p> {{ language['Your-role-is'] }}: {{ language['administrator'] }}</dp>
-    {% else %}
+      {% else %}
     <p> {{ language['Your-role-is'] }}: {{ language['normal-user'] }}</p>
     {% endif %}
 
-
-    <p>
-      <form method="POST">
+    <form method="POST">
       <div class="form-check">
         {% if user.twofactor %}
-        <input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor" checked>
+        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor" checked></p>
         {% else %}
-        <input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor">
+        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor"></p>
         {% endif %}
-        <label class="form-check-label" for="twofactor">
-          {{ language['Activate-2FA-authentication'] }}
-        </label>
-        <button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button>
+        <p><button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button></p>
     </form>
-    <p>
-    {% if twofactorurl %}
-    <p>{{ language['twofactor-advice'] }}</p>
-    <p> {{ language['2fa-secret'] }}: {{ user.twofactor }}</p>
-    <script src="/static/qrcode.min.js"></script>
+  
+      {% if twofactorurl %}
+    <div class="jumbotron">
+      <p class="lead">{{ language['twofactor-advice'] }}.</p>
+      <hr class="my-4">
+      <p> {{ language['2fa-secret'] }}: {{ user.twofactor }}
+        <script src="/static/qrcode.min.js"></script>
 
-    <div id="qrcode"></div>
-    <script type="text/javascript">
-      new QRCode(document.getElementById("qrcode"), "{{ twofactorurl }}");
-    </script>
-    {% endif %}
-</div>
+      <p>
+      <div id="qrcode" align="center">
+        <script type="text/javascript">
+          new QRCode(document.getElementById("qrcode"), "{{ twofactorurl }}");
+        </script>
+      </div>
+      </p>
+      {% endif %}
+    </div>
 
 </div>
 {% endif %}

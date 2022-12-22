@@ -1,6 +1,10 @@
 {
+    "success": "",
+    "danger": "",
+    "warning": "",
     "website_title": "MySafeIp (fr)",
     "safe_ip": "Ips de confiance",
+    "is-now-trusted": " est maintenant de confiance",
     "instant_links": "Liens instantanés",
     "Users": "Utilisateurs",
     "User": "Utilisateur",
@@ -52,8 +56,8 @@
     "Password": "Mot de passe",
     "Confirm-password": "Confirmez votre mot de passe",
     "We-are-allowing-your-ip": "Nous autorisons votre ip",
-    "You-will-be-redirected-to": "Vous serez redirigé",
-    "in-10-seconds": "dans 10 secondes",
+    "You-will-be-redirected-to": "Vous serez redirigé vers ",
+    "in-10-seconds": " dans 10 secondes",
     "Reset-password-of": "Réinitialiser le mot de passe de",
     "Reset": "Réinitialiser",
     "My-account": "Mon compte",
@@ -67,9 +71,22 @@
     "Incorrect-totp": "Code OTP incorrect",
     "enter-otp-or-leave-empty": "Entrez votre code OTP ou laissez vide",
     "Consider-two-factor": "Vous devriez activer la double authentification",
-    "twofactor-advice": "Le secret associé au code OTP ne sera affiché qu'une fois, sauvegardez le précieusement!"
-
-
-
+    "twofactor-advice": "Le secret associé au code OTP ne sera affiché qu'une fois, sauvegardez le précieusement!",
+    "ip-deleted-successfully": "Ip supprimée avec succés",
+    "An-error-occured-while-deleting-ip": "Une erreur est arrivée lors de la suppression de l'ip",
+    "Created-Manually": "Créée manuellement",
+    "Instant-link-deleted-successfully": "Lien instantané supprimé avec succès",
+    "An-error-occured-while-deleting-Instant-link": "Une erreur est survenue à la suppression du lien",
+    "is-now-accessible-directly-from": " est maintenant accessible depuis ",
+    "Sorry-this-link-does-not-exists": "Désolé, ce lien n'existe pas",
+    "Only-admin-can-get-users": "Seuls les administrateurs peuvent gérer les utilisateurs",
+    "Only-admin-can-delete-other-users": "Seuls les administrateurs peuvent supprimer les utilisateurs",
+    "You cant delete your own admin account": "Vous ne pouvez pas supprimer votre propre compte",
+    "deleted-successfully": " supprimé avec succés",
+    "An-error-occured-while-deleting" : "Une erreur est apparu en supprimant ",
+    "You-are-not-allowed-to-do-this": "Vous n'êtes pas autorisé à faire ça",
+    "An-error-occured-during-password-reset": "Une erreur est apparue lors de la remise à zéro du mot de passe",
+    "Password-reset-successfull": "Mot de passe réinitialisé",
+    "User-does-not-exist": "L'utlisateur n'existe pas"
     
 }

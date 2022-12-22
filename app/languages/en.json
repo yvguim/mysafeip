@@ -1,6 +1,10 @@
 {
+    "success": "",
+    "danger": "",
+    "warning": "",
     "website_title": "MySafeIp (en)",
     "safe_ip": "Trusted Ips",
+    "is-now-trusted": " is now trusted",
     "instant_links": "Instant links",
     "Users": "Users",
     "User": "User",
@@ -52,8 +56,8 @@
     "Password": "Password",
     "Confirm-password": "Confirm password",
     "We-are-allowing-your-ip": "We are allowing your ip",
-    "You-will-be-redirected-to": "You will be redirected to",
-    "in-10-seconds": "in 10 seconds",
+    "You-will-be-redirected-to": "You will be redirected to ",
+    "in-10-seconds": " in 10 seconds",
     "Reset-password-of": "Reset password of",
     "Reset": "Reset",
     "My-account": "My account",
@@ -67,7 +71,21 @@
     "Incorrect-totp": "Incorrect OTP code",
     "enter-otp-or-leave-empty": "Enter OTP code or leave empty if not used",
     "Consider-two-factor": "You should enable two factor authentication",
-    "twofactor-advice": "Two factor OTP secret will be shown once, STORE IT CAREFULLY"
-
-
+    "twofactor-advice": "Two factor OTP secret will be shown once, STORE IT CAREFULLY",
+    "ip-deleted-successfully": "Ip deleted successfully",
+    "An-error-occured-while-deleting-ip": "An error occured while deleting this Ip",
+    "Created-Manually": "Created manualy",
+    "Instant-link-deleted-successfully": "Instant link deleted successfully",
+    "An-error-occured-while-deleting-Instant-link": "An error occured while deleting Instant link",
+    "is-now-accessible-directly-from": " is now accessible directly from ",
+    "Sorry-this-link-does-not-exists": "Sorry this link does not exists",
+    "Only-admin-can-get-users": "Only admin can get users",
+    "Only-admin-can-delete-other-users": "Only admin can delete other users",
+    "You cant delete your own admin account": "You can't delete your own admin account",
+    "deleted-successfully": " deleted successfully",
+    "An-error-occured-while-deleting" : "An error occured while deleting ",
+    "You-are-not-allowed-to-do-this": "You are not allowed to do this",
+    "An-error-occured-during-password-reset": "An error occured during password reset",
+    "Password-reset-successfull": "Password reset successfull",
+    "User-does-not-exist": "User does not exist"
 }

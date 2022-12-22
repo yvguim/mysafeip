@@ -43,20 +43,6 @@ app.include_router(instant_access.router)
 app.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-#trans
-app_language = 'en'
-languages = {}
-language_list = glob.glob("languages/*.json")
-for lang in language_list:
-    filename  = os.path.basename(lang)
-    lang_code, ext = os.path.splitext(filename)
-
-    with open(lang, 'r', encoding='utf8') as file:
-        languages[lang_code] = json.load(file)
-
-
-alert = {"success": "","danger": "","warning": ""}
-
 @app.get("/docs")
 async def get_documentation(current_user: models.User = Depends(get_current_user)):
     """Force authentication for doc page"""
@@ -75,26 +61,27 @@ async def openapi(current_user: models.User = Depends(get_current_user)):
 # Pages definitions
 
 @app.get("/")
-async def main(request: Request, db: Session = Depends(get_db)):
+async def main(request: Request, 
+db: Session = Depends(get_db),
+language: dict = Depends(check_user_language)):
     """Home page get request"""
-    alert = {"success": "","danger": "","warning": ""}
     client_host = request.client.host
     user = await check_user(request, db)
-    language = await check_user_language(request)
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "client_host": client_host, "user": user, "language": language})
 
-@app.post("/")
-async def main(request: Request, db: Session = Depends(get_db), lang: str = Form()):
+@app.post("/lang/{lang}")
+async def main(request: Request,
+ db: Session = Depends(get_db),
+ lang: str = None,
+ language: dict = Depends(check_user_language)):
     """Home page get request"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request, lang)
     client_host = request.client.host
     user = await check_user(request, db)
     response = templates.TemplateResponse(
         "home.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "client_host": client_host, "user": user, "language": language})
     response.set_cookie(
     key="lang",
     value=lang,
@@ -102,43 +89,41 @@ async def main(request: Request, db: Session = Depends(get_db), lang: str = Form
     return response
 
 @app.get("/signin")
-async def get_signin(request: Request, db: Session = Depends(get_db)):
+async def get_signin(request: Request,
+ db: Session = Depends(get_db),
+language: dict = Depends(check_user_language)):
     """Signin get request"""
     user = await check_user(request, db)
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
-    return templates.TemplateResponse("signin.html", {"request": request, "user": user, "alert": alert, "language": languages[language]})
+    return templates.TemplateResponse("signin.html", {"request": request, "user": user, "language": language})
 
 @app.post("/signin")
 async def post_signin(
     response: Response,
     request: Request,
     db: Session = Depends(get_db),
+    language: dict = Depends(check_user_language),
     two_factor_code: str = Form(""),
     form_data: OAuth2PasswordRequestForm = Depends() ):
     """Signin post request"""
-    client_host = request.client.host
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
-    
+    client_host = request.client.host   
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
     
     if not user:
-        alert["warning"] = languages[language]['Incorrect-username-or-password']
+        language["warning"] = language['Incorrect-username-or-password']
         #raise HTTPException(status_code=400, detail="Incorrect username or password")  # 3
         response = templates.TemplateResponse(
         "signin.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
     if user.twofactor != "":
         totp = pyotp.TOTP(user.twofactor)
         if not totp.verify(two_factor_code):
-            alert["warning"] = languages[language]['Incorrect-totp']
+            language["warning"] = language['Incorrect-totp']
             user = None
             response = templates.TemplateResponse(
             "signin.html",
-            {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+            {"request": request, "client_host": client_host, "user": user, "language": language}) 
             return response
 
 
@@ -150,11 +135,11 @@ async def post_signin(
             return {
             "access_token": access_token
             }
-    alert["success"] = languages[language]['Signin-success']
+    language["success"] = language['Signin-success']
 
     response = templates.TemplateResponse(
         "signin.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "client_host": client_host, "user": user, "language": language})
     response.set_cookie(
     key="access_token",
     value=f"Bearer {encoded_token}",
@@ -163,87 +148,89 @@ async def post_signin(
     return response
 
 @app.get("/logout")
-async def logout(response : Response,request: Request):
+async def logout(response : Response,request: Request,
+ language: dict = Depends(check_user_language)):
     """logout get request"""
     client_host = request.client.host
     user = ""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     #response = RedirectResponse('/signin', status_code= 302)
 
-    alert["success"] = languages[language]['Logout-successfull']
+    language["success"] = language['Logout-successfull']
     response = templates.TemplateResponse("home.html",
-    {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]})
+    {"request": request, "client_host": client_host, "user": user, "language": language})
     response.delete_cookie(key ='access_token')
   
 
     return response
 
 @app.get("/register")
-async def register(request: Request, db: Session = Depends(get_db)):
+async def register(request: Request,
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language)):
     """register get request"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     if settings.DISABLE_REGISTER:
-        alert["warning"] = languages[language]['Registering-disabled']
+        language["warning"] = language['Registering-disabled']
 
     user = await check_user(request, db)
-    return templates.TemplateResponse("register.html", {"request": request, "user": user, "alert": alert, "language": languages[language]})
+    return templates.TemplateResponse("register.html", {"request": request, "user": user, "language": language})
 
 @app.post("/register")
-async def post_register(request: Request, email: str = Form(), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
+async def post_register(request: Request,
+ email: str = Form(),
+ password: str = Form(),
+ confirm_password: str = Form(),
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language)):
     """register post request"""
     client_host = request.client.host
     user = await check_user(request, db)
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     if settings.DISABLE_REGISTER:
-        alert["danger"] = languages[language]['Registering-disabled']
+        language["danger"] = language['Registering-disabled']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
 
     if user:
-        alert["warning"] = languages[language]['You-are-already-logged']
+        language["warning"] = language['You-are-already-logged']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
     db_user = crud.get_user_by_email(db, email)
 
     if db_user:
-        alert["warning"] = languages[language]['Email-already-registered']
+        language["warning"] = language['Email-already-registered']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
     if not password_validity(password):
-        alert["warning"] = languages[language]['Password-help']
+        language["warning"] = language['Password-help']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "email": email, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "email": email, "language": language}) 
         return response
 
     if confirm_password != password:
-        alert["warning"] = languages[language]['Password-missmatch']
+        language["warning"] = language['Password-missmatch']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
     new_user = schemas.UserCreate(email=email, is_admin=False, password=password)
     user = crud.create_user(db=db, user=new_user)
     if user:
-        alert["success"] = languages[language]['Account-creation-successfull']
+        language["success"] = language['Account-creation-successfull']
     else:
-        alert["danger"] = languages[language]['Account-creation-error']
+        language["danger"] = language['Account-creation-error']
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]}) 
+        {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
     
     access_token = create_access_token(sub=user.id)
@@ -251,7 +238,7 @@ async def post_register(request: Request, email: str = Form(), password: str = F
 
     response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "client_host": client_host, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "client_host": client_host, "user": user, "language": language})
 
     response.set_cookie(
     key="access_token",

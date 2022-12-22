@@ -29,67 +29,54 @@ router = APIRouter(
 router.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-#trans
-app_language = 'en'
-languages = {}
-language_list = glob.glob("languages/*.json")
-for lang in language_list:
-    filename  = os.path.basename(lang)
-    lang_code, ext = os.path.splitext(filename)
-
-    with open(lang, 'r', encoding='utf8') as file:
-        languages[lang_code] = json.load(file)
-
 @router.get("/read", tags=["users"])
 async def read_users(request: Request,
 db: Session = Depends(get_db),
+language: dict = Depends(check_user_language),
 current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
+
     user = current_user
     if current_user.is_admin:
         users = crud.get_users(db)
     else:
         users = []
-        alert["warning"] = "Only admin can get users"
-    print(languages[language])
+        language["warning"] = language["Only admin can get users"]
 
     return templates.TemplateResponse(
         "users.html",
-        {"request": request, "users": users, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "users": users, "user": user, "language": language})
 
 
 
 @router.post("/read", tags=["users"])
 async def delete_users(request: Request,
-db: Session = Depends(get_db),
-email: str = Form(),
-current_user: models.User = Depends(get_current_user)):
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language),
+ email: str = Form(),
+ current_user: models.User = Depends(get_current_user)):
     """read and return all users"""
     user = current_user
     users = ""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     # non admin user can't delete other account
     if (not user.is_admin) and (user.email != email):
-        alert["warning"] = "Only admin can delete other users"
+        language["warning"] = language["Only-admin-can-delete-other-users"]
         return templates.TemplateResponse(
         "users.html",
-        {"request": request, "users": "", "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "users": "", "user": user, "language": language})
 
     # admin can't delete his own account
     if (user.is_admin) and (user.email == email):
-        alert["warning"] = "you can't delete your own admin account"
+        language["warning"] = language["you-cant-delete-your-own-admin-account"]
         users = crud.get_users(db)
         return templates.TemplateResponse(
         "users.html",
-        {"request": request, "users": users, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "users": users, "user": user, "language": language})
 
     if crud.delete_user(db, email):
-        alert["success"] = "User " + email + " deleted successfully"
+        language["success"] = language["User "] + email + language["deleted-successfully"]
     else:
-        alert["warning"] = "An error occured while deleting" + email
+        language["warning"] = language["An-error-occured-while-deleting"] + email
     
     if user.is_admin:
         users = crud.get_users(db)
@@ -101,97 +88,101 @@ current_user: models.User = Depends(get_current_user)):
 
     return templates.TemplateResponse(
         "users.html",
-        {"request": request, "users": users, "user": user, "alert": alert, "language": languages[language]})
+        {"request": request, "users": users, "user": user, "language": language})
 
 
 @router.get("/reset_password/{user_id}")
-async def reset_password(user_id: int, request: Request, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db),):
+async def reset_password(user_id: int,
+ request: Request,
+ current_user: models.User = Depends(get_current_user),
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language)):
     """register get request"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
+    
     if not current_user.is_admin and (current_user != user_id):
-        alert["danger"] = "You are not allowed to do this."
+        language["danger"] = language["You-are-not-allowed-to-do-this"]
         user = False
-        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert, "language": languages[language]})
+        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "language": language})
     
     user = crud.get_user(db, user_id)
-    return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert, "language": languages[language]})
+    return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "language": language})
 
 @router.post("/reset_password/{user_id}")
-async def post_reset_password(user_id: int,request: Request, current_user: models.User = Depends(get_current_user), password: str = Form(), confirm_password: str = Form(), db: Session = Depends(get_db)):
+async def post_reset_password(user_id: int,
+ request: Request,
+ current_user: models.User = Depends(get_current_user),
+ password: str = Form(),
+ confirm_password: str = Form(),
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language)):
     """register post request"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     if not current_user.is_admin and (current_user != user_id):
-        alert["danger"] = "You are not allowed to do this."
+        language["danger"] = language["You-are-not-allowed-to-do-this"]
         user = False
-        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "alert": alert, "language": languages[language]  })
+        return templates.TemplateResponse("reset_password.html", {"request": request, "user": user, "language": language})
 
     user = crud.get_user(db, user_id)
     if not password_validity(password):
-        alert["warning"] = "Password must be 6 characters minimum, contain lower case, upper case, a number and special character."
+        language["warning"] = language["Password-help"]
         response = templates.TemplateResponse(
         "reset_password.html",
-        {"request": request, "alert": alert, "user": user, "language": languages[language]}) 
+        {"request": request, "alert": alert, "user": user, "language": language}) 
         return response
 
     if confirm_password != password:
-        alert["warning"] = "Password missmatch!"
+        language["warning"] = language["Password-missmatch"]
         response = templates.TemplateResponse(
         "reset_password.html",
-        {"request": request, "alert": alert, "user": user, "language": languages[language]}) 
+        {"request": request, "alert": alert, "user": user, "language": language}) 
         return response
     if (user.id != current_user.id) and (not current_user.is_admin):
-        alert["danger"] = "You are not allowed to reset other users passwords"
+        language["danger"] = language["You-are-not-allowed-to-do-this"]
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "alert": alert, "user": current_user, "language": languages[language]}) 
+        {"request": request, "alert": alert, "user": current_user, "language": language}) 
         return response
     user = crud.reset_user_password(db=db, user=user, password=password)
-    print(user)
 
     if not user:
-        alert["danger"] = "An error occured during password reset."
+        language["danger"] = language["An-error-occured-during-password-reset"]
         response = templates.TemplateResponse(
         "register.html",
-        {"request": request, "alert": alert, "user": current_user, "language": languages[language]}) 
+        {"request": request, "alert": alert, "user": current_user, "language": language}) 
         return response
     
-    alert["success"] = "Password reset successfull."
+    language["success"] = language["Password-reset-successfull"]
     response = templates.TemplateResponse(
         "reset_password.html",
-        {"request": request, "alert": alert, "user": user, "language": languages[language]}) 
+        {"request": request, "alert": alert, "user": user, "language": language}) 
     return response
 
 
 @router.get("/details/{user_id}", response_model=schemas.User)
 async def user_details(user_id: int,
-request: Request,
-db: Session = Depends(get_db),
-current_user: models.User = Depends(get_current_user)):
+ request: Request,
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language),
+ current_user: models.User = Depends(get_current_user)):
     """search and return one user by id"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     if current_user.is_admin:
         user = crud.get_user(db, user_id=user_id)
     else:
         user = current_user
     if user is None:
-        alert["warning"] = "User does not exist."
+        language["warning"] = language["User-does-not-exist"]
         user = None 
     twofactorurl = ""
 
-    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "alert": alert, "language": languages[language]})
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "language": language})
 
 @router.post("/details/{user_id}")
 async def user_details(user_id: int,
-request: Request,
-twofactor: bool = Form(""),
-current_user: models.User = Depends(get_current_user),
-db: Session = Depends(get_db)):
+ request: Request,
+ twofactor: bool = Form(""),
+ current_user: models.User = Depends(get_current_user),
+ db: Session = Depends(get_db),
+ language: dict = Depends(check_user_language)):
     """register get request"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
     twofactorurl = ""
 
     if current_user.is_admin:
@@ -206,4 +197,4 @@ db: Session = Depends(get_db)):
     if not twofactor and user.twofactor != "":
         crud.disable_user_twofactor(db, user)
     
-    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "alert": alert, "language": languages[language]})
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "language": language})

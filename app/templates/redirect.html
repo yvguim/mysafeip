@@ -20,20 +20,24 @@
       </div>
     </nav>
   </header>
+
   <main role="main class=" flex-shrink-0"">
-    {% if alert['success'] %}
+    {% if language['success'] %}
     <div class="alert alert-success" role="alert">
-      {{ alert['success'] }}
+      <h3>{{ language['Welcome'] }}</h3>
+      <h3>{{ language['success'] }}</h3>
     </div>
     {% endif %}
-    {% if alert['danger'] %}
+    {% if language['danger'] %}
     <div class="alert alert-danger" role="alert">
-      {{ alert['danger'] }}
+      <h3>{{ language['Welcome'] }}</h3>
+      <h3></h3>{{ language['danger'] }}</h3>
     </div>
     {% endif %}
-    {% if alert['warning'] %}
+    {% if language['warning'] %}
     <div class="alert alert-warning" role="alert">
-      {{ alert['warning'] }}
+      <h3>{{ language['Welcome'] }}</h3>
+      <h3></h3>{{ language['warning'] }}</h3>
     </div>
     {% endif %}
 
@@ -41,8 +45,8 @@
   <footer class="fixed-bottom" style="background-color: #8b89899a;">
     <div class="container">
       <span class="text-muted">
-        <p>Mysafeip is an opensource project.
-          New to Mysafeip? <a href="https://github.com/yvguim/mysafeip">Visit our github homepage</a></p>
+        <p>{{ language['bottom-text'] }} <a
+            href="https://github.com/yvguim/mysafeip">https://github.com/yvguim/mysafeip</a></p>
       </span>
     </div>
     <script src="/static/jquery.min-1.12.4.js"></script>

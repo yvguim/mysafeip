@@ -28,33 +28,22 @@ router = APIRouter(
 router.mount("/static", StaticFiles(directory="templates/static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-#trans
-app_language = 'en'
-languages = {}
-language_list = glob.glob("languages/*.json")
-for lang in language_list:
-    filename  = os.path.basename(lang)
-    lang_code, ext = os.path.splitext(filename)
-
-    with open(lang, 'r', encoding='utf8') as file:
-        languages[lang_code] = json.load(file)
-
 
 @router.get("/config/")
 async def list_ips(
 request: Request,
 db: Session = Depends(get_db),
+language: dict = Depends(check_user_language),
 current_user: models.User = Depends(get_current_user)):
     """return all ips"""
     ips = crud.get_ips(db, user = current_user)
-    language = await check_user_language(request)
     # if get request come from mysafeip-client, return json
     if request.headers.get('Cli'):
         ip_list = [{"owner": ip.owner.email, "value": ip.value,"description": ip.description} for ip in ips]
         return ip_list
     
     ip = request.client.host
-    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "alert": alert, "language": languages[language]})
+    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "language": language})
     return response
 
 @router.post("/config/", response_model=schemas.InstantAccess)
@@ -64,29 +53,26 @@ ip_id: str = Form(""),
 description: str = Form(""),
 action: str = Form(""),
 db: Session = Depends(get_db),
+language: dict = Depends(check_user_language),
 current_user: models.User = Depends(get_current_user)):
     """declare or delete a safe ip"""
-    alert = {"success": "","danger": "","warning": ""}
-    language = await check_user_language(request)
-    print(action)
     if action == 'delete':
         if crud.delete_ip(db, ip_id):
-            alert["success"] = "ip deleted successfully"
+            language["success"] = language["ip-deleted-successfully"]
         else:
-            alert["warning"] = "An error occured while deleting ip"
+            language["warning"] = language["An-error-occured-while-deleting-ip"]
         ip = request.client.host
-
  
     if action == 'create':
         if ip == '':
             ip = request.client.host
         
-        ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip, origin = "Created Manually", description=description)
+        ip_created = crud.create_user_ip(db=db, user_id=current_user.id, ip=ip, origin = language["Created-Manually"], description=description)
         if ip_created:
-            alert["success"] = str(ip_created.value) + " is now trusted"
+            language["success"] = str(ip_created.value) + language["is-now-trusted"]
 
     ips = crud.get_ips(db, user = current_user)
-    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "alert": alert, "language": languages[language]})
+    response = templates.TemplateResponse("ips.html", {"request": request, "user": current_user, "ips": ips, "ip": ip, "language": language})
     return response
 
 

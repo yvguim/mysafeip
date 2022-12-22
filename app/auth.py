@@ -12,6 +12,9 @@ from fastapi import Request, HTTPException, status, Depends
 from fastapi.security.utils import get_authorization_scheme_param
 from database import get_db
 import re
+import glob
+import os
+import json
 
 
 # Redefine OAuth2PasswordBearer to add cookie support (for browser)
@@ -137,9 +140,18 @@ async def check_user(request: Request, db):
         current_user: User = await get_current_user(token=token, db=db)
     return current_user
 
-async def check_user_language(request: Request, lang = None):
+def check_user_language(request: Request, lang = None):
+    languages = {}
+    language_list = glob.glob("languages/*.json")
+    for language in language_list:
+        filename  = os.path.basename(language)
+        lang_code, ext = os.path.splitext(filename)
+        with open(language, 'r', encoding='utf8') as file:
+            languages[lang_code] = json.load(file)
+    
     print(lang)
+        
     lang = lang or request.cookies.get("lang")
     if lang and lang in ['en', 'fr']:
-        return lang
-    return "en"
+        return languages[lang]
+    return languages["en"]

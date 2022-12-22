@@ -39,10 +39,10 @@
           </ul>
           {% endif %}
         </div>
-        <form class="d-flex" action="/" method="POST"><input hidden=true name="lang" value="en">
+        <form class="d-flex" action="/lang/en" method="POST">
           <button type="submit" class="btn btn-outline-primary btn-sm m-1">EN</button>
         </form>
-        <form class="d-flex" action="/" method="POST"><input hidden=true name="lang" value="fr">
+        <form class="d-flex" action="/lang/fr" method="POST">
           <button type="submit" class="btn btn-outline-primary btn-sm m-1">FR</button>
         </form>
         {% if user.email %}
@@ -58,19 +58,19 @@
     </nav>
   </header>
   <main role="main class=" flex-shrink-0"">
-    {% if alert['success'] %}
+    {% if language['success'] %}
     <div class="alert alert-success" role="alert">
-      {{ alert['success'] }}
+      {{ language['success'] }}
     </div>
     {% endif %}
-    {% if alert['danger'] %}
+    {% if language['danger'] %}
     <div class="alert alert-danger" role="alert">
-      {{ alert['danger'] }}
+      {{ language['danger'] }}
     </div>
     {% endif %}
-    {% if alert['warning'] %}
+    {% if language['warning'] %}
     <div class="alert alert-warning" role="alert">
-      {{ alert['warning'] }}
+      {{ language['warning'] }}
     </div>
     {% endif %}
 
