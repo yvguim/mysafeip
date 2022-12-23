@@ -160,10 +160,8 @@ def check_user_language(request: Request, lang = None):
         lang_code, ext = os.path.splitext(filename)
         with open(language, 'r', encoding='utf8') as file:
             languages[lang_code] = json.load(file)
-    
-    print(lang)
         
     lang = lang or request.cookies.get("lang")
     if lang and lang in ['en', 'fr']:
         return languages[lang]
-    return languages["en"]
+    return languages[settings.DEFAULT_LANGUAGE]
