@@ -172,23 +172,38 @@ async def user_details(user_id: int,
         language["warning"] = language["User-does-not-exist"]
         user = None 
     twofactorurl = ""
+    tokens = crud.get_tokens(db, user)
 
-    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "language": language})
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "tokens": tokens, "language": language})
 
 @router.post("/details/{user_id}")
 async def user_details(user_id: int,
  request: Request,
  twofactor: bool = Form(""),
+ token: bool = Form(""),
+ action: str = Form(""),
+ token_id = Form(""),
+ description: str = Form(""),
  current_user: models.User = Depends(get_current_user),
  db: Session = Depends(get_db),
  language: dict = Depends(check_user_language)):
     """register get request"""
     twofactorurl = ""
+    newtoken = ""
 
     if current_user.is_admin:
         user = crud.get_user(db, user_id=user_id)
     else:
         user = current_user
+    
+    if action == 'delete':
+        if crud.delete_token(db, token_id):
+            language["success"] = language["Instant-link-deleted-successfully"]
+        else:
+            language["warning"] = language["An-error-occured-while-deleting-Instant-link"]
+
+    if token:
+        newtoken = crud.create_new_token(db, user.id, description)
 
     if twofactor and user.twofactor == "":
         crud.enable_user_twofactor(db, user)
@@ -196,5 +211,7 @@ async def user_details(user_id: int,
 
     if not twofactor and user.twofactor != "":
         crud.disable_user_twofactor(db, user)
+
+    tokens = crud.get_tokens(db, user)
     
-    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "language": language})
+    return templates.TemplateResponse("user-details.html", {"request": request, "user": user, "twofactorurl": twofactorurl, "newtoken": newtoken, "tokens": tokens, "language": language})

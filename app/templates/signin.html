@@ -20,6 +20,8 @@
       <h1 class="h3 mb-3 font-weight-normal">{{ language['Login'] }}</h1>
       <p>{{ language['Register-help'] }} <a href="/register">{{ language['Registering'] }}</a>.
     </div>
+    <input hidden=true type="text" id="key" name="username" value="{{username}}">
+    <input hidden=true type="password" name="secret" value="{{secret}}">
     <input type="email" id="inputEmail" class="form-control mb-1" name="username" value="{{username}}"
       placeholder="{{ language['Email-address'] }}" required autofocus>
     <input type="password" id="inputPassword" class="form-control mb-3" name="password" value="{{password}}"

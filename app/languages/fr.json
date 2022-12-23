@@ -87,6 +87,11 @@
     "You-are-not-allowed-to-do-this": "Vous n'êtes pas autorisé à faire ça",
     "An-error-occured-during-password-reset": "Une erreur est apparue lors de la remise à zéro du mot de passe",
     "Password-reset-successfull": "Mot de passe réinitialisé",
-    "User-does-not-exist": "L'utlisateur n'existe pas"
-    
+    "User-does-not-exist": "L'utlisateur n'existe pas",
+    "List-of-tokens": "Liste des tokens",
+    "token-id": "Token ID",
+    "token-advice": "Le secret associé au token ne sera affiché qu'une fois, sauvegardez le précieusement!",
+    "token-key": "Clef",
+    "token-secret": "Secret",
+    "Create-new-token": "Créer un nouveau token"
 }

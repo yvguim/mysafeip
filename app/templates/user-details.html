@@ -2,9 +2,9 @@
 
 {% block content %}
 {% if user %}
-<div class="text-center mt-5">
-  <form style="max-width:480px;margin:auto;" method="POST">
-    <div class="text-center mb-4">
+<div class="text-center mt-3">
+  
+    <div class="text-center mb-3">
       <h1 class="h3 mb-3 font-weight-normal">{{ language['My-account'] }}</h1>
       </h1>
     </div>
@@ -17,15 +17,20 @@
 
     <form method="POST">
       <div class="form-check">
+        <p>{{ language['Create-new-token'] }}<input class="form-check-input" type="checkbox" value="true" name="token"
+            id="token"><input type="description" class="form-control mb-1" name="description" value="{{ description }}"
+            placeholder="{{ language['usefull-description'] }}" autofocus></p>
         {% if user.twofactor %}
-        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor" checked></p>
+        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true"
+            name="twofactor" id="twofactor" checked></p>
         {% else %}
-        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true" name="twofactor" id="twofactor"></p>
+        <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true"
+            name="twofactor" id="twofactor"></p>
         {% endif %}
         <p><button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button></p>
     </form>
-  
-      {% if twofactorurl %}
+
+    {% if twofactorurl %}
     <div class="jumbotron">
       <p class="lead">{{ language['twofactor-advice'] }}.</p>
       <hr class="my-4">
@@ -39,8 +44,46 @@
         </script>
       </div>
       </p>
-      {% endif %}
     </div>
+    {% endif %}
+
+    {% if newtoken %}
+    <div class="jumbotron">
+      <p class="lead">{{ language['token-advice'] }}.</p>
+      <hr class="my-4">
+      <p>{{ language['token-key'] }}: {{ newtoken['key'] }}</div>
+      <p>{{ language['token-secret'] }}: {{ newtoken['secret'] }}</p>
+    </div>
+    {% endif %}
+
+    {% if tokens %}
+    <div class="container">
+      <div class="table-responsive">
+        <table class="table table-striped caption-top">
+          <caption>{{ language['List-of-tokens'] }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ language['key'] }}</th>
+              <th scope="col">{{ language['Description'] }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for token in tokens %}
+            <tr>
+              <td>{{ token.key }}</td>
+              <td>{{ token.description }}</td>
+              <td>
+                <form method="POST"><input hidden=true name="action" value="delete"><input hidden=true name="token_id"
+                    value="{{ token.id }}"><button class="btn btn-sm btn-primary btn-block"
+                    type="submit">Delete</button></form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
 
 </div>
 {% endif %}

@@ -41,3 +41,15 @@ class UserCreate(User):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class Token(BaseModel):
+    id: Optional[int]
+    owner_id: Optional[int]
+    key: str = None
+    secret: str = None
+    description: Union[str, None] = None
+    class Config:
+        orm_mode = True
+
+class TokenCreate(Token):
+    pass

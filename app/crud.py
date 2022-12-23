@@ -1,8 +1,8 @@
 import secrets
 from sqlalchemy.orm import Session
 import security
-from schemas import UserCreate, IpCreate, InstantAccessCreate
-from models import User, Ip, InstantAccess
+from schemas import UserCreate, IpCreate, InstantAccessCreate, TokenCreate
+from models import User, Ip, InstantAccess, Token
 import pyotp
 
 def get_user(db: Session, user_id: int):
@@ -90,40 +90,55 @@ def create_user_ip(db: Session, user_id: int, ip, origin = "", description = "")
     
 def create_instant_access(db: Session, link: str, user_id: int, description = ""):
     unique_link = secrets.token_hex(16)
-    print("!!!!!!!!!!!!!")
-    print(description)
     ia = InstantAccessCreate(link=link, unique_link=unique_link, owner_id=user_id, description=description)
     ia_data = ia.dict()
-    print(ia_data)
     db_ia = InstantAccess(description=ia_data['description'], link=str(ia_data['link']), unique_link=ia_data['unique_link'], owner_id=ia_data['owner_id'])
     db.add(db_ia)
     db.commit()
     db.refresh(db_ia)
     return db_ia
+
+def create_new_token(db, user_id: int, description: None):
+    key = secrets.token_hex(16)
+    secret = secrets.token_hex(32)
+    token = TokenCreate(key=key, secret=secret, owner_id=user_id, description=description)
+    token_data = token.dict()
+    print(token_data)
+    db_token = Token(description=token_data['description'], key=str(token_data['key']), secret=security.get_password_hash(token_data['secret']), owner_id=token_data['owner_id'])
+    db.add(db_token)
+    db.commit()
+    db.refresh(db_token)
+    return {"key": db_token.key, "secret": secret}
+
+def get_tokens(db: Session, user):
+        return db.query(Token).filter(Token.owner == user)
+
+def get_token(db: Session, id):
+    return db.query(Token).get(id)
+
+def delete_token(db: Session, id):
+    db_token = get_token(db, id)
+    if not db_token:
+        return False
+    db.delete(db_token)
+    db.commit()
+    return True
     
 def get_link(db: Session, link_id: int):
     return db.query(InstantAccess).get(link_id)
 
 def get_links(db: Session, user):
-    if user.is_admin:
-        return db.query(InstantAccess).all()
-    else:
-        return db.query(InstantAccess).filter(InstantAccess.owner == user)
+    return db.query(InstantAccess).filter(InstantAccess.owner == user)
 
 def get_link_by_unique_link(db: Session, unique_link: str):
     return db.query(InstantAccess).filter(InstantAccess.unique_link == unique_link).first()
 
 def delete_link(db: Session, id):
-    print(id)
     db_link = get_link(db, id)
-    print(db_link)
     if not db_link:
         return False
     origin = db_link.unique_link
-    print("origin")
-    print(origin)
     ips_to_delete = db.query(Ip).filter(Ip.origin == origin).all()
-    print(ips_to_delete)
     for ip in ips_to_delete:
         delete_ip(db, ip.id)
     db.delete(db_link)

@@ -2,7 +2,7 @@ from typing import Optional, Dict
 from datetime import datetime, timedelta
 from sqlalchemy.orm.session import Session
 from jose import jwt, JWTError
-from models import User
+from models import User, Token
 from schemas import TokenData
 from settings import settings
 from security import verify_password
@@ -79,6 +79,18 @@ def authenticate(
         return None
     return user
 
+def authenticate_by_key(
+    key: str,
+    secret: str,
+    db: Session,
+) -> Optional[User]:
+    token = db.query(Token).filter(Token.key == key).first()
+    if not token:
+        return None
+    if not verify_password(secret, token.secret): 
+        return None
+
+    return token.owner
 
 def create_access_token(*, sub: str) -> str:  # 2
     return _create_token(

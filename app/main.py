@@ -7,13 +7,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import RedirectResponse
-from fastapi.responses import HTMLResponse
 
 
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, encoders, Form
 
-from auth import authenticate, create_access_token, get_current_user, check_user, check_user_language, password_validity
+from auth import authenticate, authenticate_by_key, create_access_token, get_current_user, check_user, check_user_language, password_validity
 import crud
 import models
 import schemas
@@ -106,8 +104,9 @@ async def post_signin(
     form_data: OAuth2PasswordRequestForm = Depends() ):
     """Signin post request"""
     client_host = request.client.host   
-    user = authenticate(email=form_data.username, password=form_data.password, db=db)
     
+    user = authenticate(email=form_data.username, password=form_data.password, db=db)
+
     if not user:
         language["warning"] = language['Incorrect-username-or-password']
         #raise HTTPException(status_code=400, detail="Incorrect username or password")  # 3
@@ -116,7 +115,7 @@ async def post_signin(
         {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
-    if user.twofactor != "":
+    if user.twofactor != "" and not key:
         totp = pyotp.TOTP(user.twofactor)
         if not totp.verify(two_factor_code):
             language["warning"] = language['Incorrect-totp']
@@ -125,7 +124,6 @@ async def post_signin(
             "signin.html",
             {"request": request, "client_host": client_host, "user": user, "language": language}) 
             return response
-
 
     access_token = create_access_token(sub=user.id)
     encoded_token = encoders.jsonable_encoder(access_token)
@@ -146,6 +144,23 @@ async def post_signin(
     httponly=True)
 
     return response
+
+@app.post("/token-signin")
+async def post_signin(
+    db: Session = Depends(get_db),
+    key: str = Form(""),
+    secret: str = Form("")):
+    """Signin post request"""
+    
+    user = authenticate_by_key(key=key, secret=secret, db=db)
+    
+    if not user:
+        return {"Auth": "Error"} 
+
+    access_token = create_access_token(sub=user.id)
+    
+    return {"access_token": access_token}
+    
 
 @app.get("/logout")
 async def logout(response : Response,request: Request,

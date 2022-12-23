@@ -87,5 +87,11 @@
     "You-are-not-allowed-to-do-this": "You are not allowed to do this",
     "An-error-occured-during-password-reset": "An error occured during password reset",
     "Password-reset-successfull": "Password reset successfull",
-    "User-does-not-exist": "User does not exist"
+    "User-does-not-exist": "User does not exist",
+    "List-of-tokens": "List of tokens",
+    "token-id": "Token ID",
+    "token-advice": "Token secret will be shown once, STORE IT CAREFULLY",
+    "token-key": "Token key",
+    "token-secret": "Secret",
+    "Create-new-token": "Create a new token"
 }
