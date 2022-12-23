@@ -74,7 +74,7 @@ async def delete_users(request: Request,
         {"request": request, "users": users, "user": user, "language": language})
 
     if crud.delete_user(db, email):
-        language["success"] = language["User "] + email + language["deleted-successfully"]
+        language["success"] = language["User"] + " " + email + language["deleted-successfully"]
     else:
         language["warning"] = language["An-error-occured-while-deleting"] + email
     
