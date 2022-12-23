@@ -2,7 +2,7 @@
     "success": "",
     "danger": "",
     "warning": "",
-    "website_title": "MySafeIp (fr)",
+    "website_title": "MySafeIp",
     "safe_ip": "Ips de confiance",
     "is-now-trusted": " est maintenant de confiance",
     "instant_links": "Liens instantanés",
@@ -93,5 +93,8 @@
     "token-advice": "Le secret associé au token ne sera affiché qu'une fois, sauvegardez le précieusement!",
     "token-key": "Clef",
     "token-secret": "Secret",
-    "Create-new-token": "Créer un nouveau token"
+    "Create-new-token": "Créer un nouveau token",
+    "key": "Clef",
+    "Language": "Langue"
+
 }

@@ -69,7 +69,7 @@ language: dict = Depends(check_user_language)):
         "home.html",
         {"request": request, "client_host": client_host, "user": user, "language": language})
 
-@app.post("/lang/{lang}")
+@app.get("/lang/{lang}")
 async def main(request: Request,
  db: Session = Depends(get_db),
  lang: str = None,

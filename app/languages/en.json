@@ -2,7 +2,7 @@
     "success": "",
     "danger": "",
     "warning": "",
-    "website_title": "MySafeIp (en)",
+    "website_title": "MySafeIp",
     "safe_ip": "Trusted Ips",
     "is-now-trusted": " is now trusted",
     "instant_links": "Instant links",
@@ -93,5 +93,7 @@
     "token-advice": "Token secret will be shown once, STORE IT CAREFULLY",
     "token-key": "Token key",
     "token-secret": "Secret",
-    "Create-new-token": "Create a new token"
+    "Create-new-token": "Create a new token",
+    "key": "Key",
+    "Language": "Language"
 }

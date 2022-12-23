@@ -2,12 +2,8 @@
 
 {% block content %}
 {% if user %}
-<div class="text-center mt-3">
-  
-    <div class="text-center mb-3">
+<div class="mt-7" style="max-width:680px;margin:auto;">
       <h1 class="h3 mb-3 font-weight-normal">{{ language['My-account'] }}</h1>
-      </h1>
-    </div>
     <p> {{ language['Your-mail-address-is'] }}: {{ user.email }}</p>
     {% if user.is_admin %}
     <p> {{ language['Your-role-is'] }}: {{ language['administrator'] }}</dp>
@@ -16,9 +12,9 @@
     {% endif %}
 
     <form method="POST">
-      <div class="form-check">
+      <div class="form-check" >
         <p>{{ language['Create-new-token'] }}<input class="form-check-input" type="checkbox" value="true" name="token"
-            id="token"><input type="description" class="form-control mb-1" name="description" value="{{ description }}"
+            id="token"><input type="description" class="form-control " name="description" value="{{ description }}"
             placeholder="{{ language['usefull-description'] }}" autofocus></p>
         {% if user.twofactor %}
         <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true"
@@ -27,14 +23,14 @@
         <p>{{ language['Activate-2FA-authentication'] }}<input class="form-check-input" type="checkbox" value="true"
             name="twofactor" id="twofactor"></p>
         {% endif %}
-        <p><button class="btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button></p>
+        <p><button class="text-center btn btn-sm btn-primary btn-block" type="submit">{{ language['Save'] }}</button></p>
     </form>
 
     {% if twofactorurl %}
     <div class="jumbotron">
       <p class="lead">{{ language['twofactor-advice'] }}.</p>
       <hr class="my-4">
-      <p> {{ language['2fa-secret'] }}: {{ user.twofactor }}
+      <p><b>{{ language['2fa-secret'] }}</b>: {{ user.twofactor }}
         <script src="/static/qrcode.min.js"></script>
 
       <p>
@@ -51,8 +47,8 @@
     <div class="jumbotron">
       <p class="lead">{{ language['token-advice'] }}.</p>
       <hr class="my-4">
-      <p>{{ language['token-key'] }}: {{ newtoken['key'] }}</div>
-      <p>{{ language['token-secret'] }}: {{ newtoken['secret'] }}</p>
+      <p><b>{{ language['token-key'] }}</b>: {{ newtoken['key'] }}</div>
+      <p><b>{{ language['token-secret'] }}</b>: {{ newtoken['secret'] }}</p>
     </div>
     {% endif %}
 

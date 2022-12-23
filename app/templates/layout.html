@@ -15,6 +15,7 @@
       <div class="container">
         <a href="/" class="navbar-brand mb-0 h1"><img class="d-inline-block align-top" src="/static/icon.png" width="70"
             height="70">{{ language['website_title'] }}</a>
+            
         {% if user.email%}
         <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +37,19 @@
             <li class="nav-item">
               <a href="/users/details/{{ user.id }}" class="nav-link">{{ language['My-account'] }}</a>
             </li>
+            
           </ul>
           {% endif %}
         </div>
-        <form class="d-flex" action="/lang/en" method="POST">
-          <button type="submit" class="btn btn-outline-primary btn-sm m-1">EN</button>
-        </form>
-        <form class="d-flex" action="/lang/fr" method="POST">
-          <button type="submit" class="btn btn-outline-primary btn-sm m-1">FR</button>
-        </form>
+        <div class="dropdown">
+          <a class="btn btn-secondary dropdown-toggle btn-sm m-1" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ language['Language'] }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="/lang/fr">FR</a></li>
+            <li><a class="dropdown-item" href="/lang/en">EN</a></li>
+          </ul>
+        </div>
         {% if user.email %}
         <form class="d-flex" action="/logout" method="GET">
           <button type="submit" class="btn btn-danger btn-sm m-1">{{ language['Logout'] }}</button>
@@ -54,6 +59,7 @@
           <button type="submit" class="btn btn-primary btn-sm m-1">{{ language['Login'] }}</button>
         </form>
         {% endif %}
+        
       </div>
     </nav>
   </header>
