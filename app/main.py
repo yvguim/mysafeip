@@ -115,7 +115,7 @@ async def post_signin(
         {"request": request, "client_host": client_host, "user": user, "language": language}) 
         return response
 
-    if user.twofactor != "" and not key:
+    if user.twofactor != "":
         totp = pyotp.TOTP(user.twofactor)
         if not totp.verify(two_factor_code):
             language["warning"] = language['Incorrect-totp']
