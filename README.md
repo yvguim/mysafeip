@@ -1,7 +1,7 @@
 # MySafeIp
 
 ## MySafeIp is a web app acting as a trusted IP source for firewalls.
-With it, I don't have to open my own services (Nextcloud, bitwarden, etc...) worldwild. Just me, my family and friends can use those services easily. Family and friends don't even need an account to mysafeip with instant link feature.
+With it, I don't have to open my own services (Nextcloud, bitwarden, etc...) worldwilde. Just me, my family and friends can use those services easily. Family and friends don't even need an account to mysafeip with instant link feature.
 It comes with a [docker container](https://github.com/yvguim/mysafeip-compose) and a [client](https://github.com/yvguim/mysafeip-client) to retrieve IP from server.
 <p align="center">
   <img width="400" height="383" src="https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png">
