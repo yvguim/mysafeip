@@ -2,7 +2,10 @@
 
 ## MySafeIp is a web app acting as a trusted IP source for firewalls.
 It allows registered people declare their IP manually or automatically on the app and to be allowed by their firewalls on the fly.
-![](https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png)
+It comes with a [docker container](https://github.com/yvguim/mysafeip-compose) and a [client](https://github.com/yvguim/mysafeip-client) to retrieve IP from server.
+<p align="center">
+  <img width="400" height="383" src="https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png">
+</p>
 
 It is built on top of [Fastapi](https://github.com/tiangolo/fastapi) framework and available in English and French.
 
