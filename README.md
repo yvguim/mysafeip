@@ -7,6 +7,8 @@ It comes with a [docker container](https://github.com/yvguim/mysafeip-compose) a
   <img width="400" height="383" src="https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png">
 </p>
 
+***Tips***: User don't need to know his public IP, Mysafeip will check http headers directly. It also apply to instant links users.
+
 It is built on top of [Fastapi](https://github.com/tiangolo/fastapi) framework and available in English and French.
 
 I consider MySafeIp 0.9 as an Alpha version for the moment (better code organisation, refactoring and tests are coming) but it works pretty well out of the box.
