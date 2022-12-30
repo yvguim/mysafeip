@@ -66,7 +66,6 @@ unique_link: str,
 db: Session = Depends(get_db),
 language: dict = Depends(check_user_language)
 ):
-    print(language)
     """Create an instant access link to share with others"""
     client_host = request.client.host
     destination_link = crud.get_link_by_unique_link(db, unique_link = unique_link)

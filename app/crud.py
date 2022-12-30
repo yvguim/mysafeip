@@ -35,7 +35,6 @@ def reset_user_password(db: Session, user: User, password: str):
 def enable_user_twofactor(db: Session, user: User):
     user = db.query(User).get(user.id)
     user.twofactor = pyotp.random_base32()
-    print(user.twofactor)
     db.commit()
     db.refresh(user)
     return user
@@ -77,7 +76,6 @@ def get_ip_for_user(db: Session, user_id: int, ip, origin, description):
 
 def create_user_ip(db: Session, user_id: int, ip, origin = "", description = ""):
     ip_exists = get_ip_for_user(db, user_id = user_id, ip = ip, origin = origin, description = description)
-    print(ip_exists)
     if not ip_exists:
         ip = IpCreate(description=description, value=ip, origin=origin, owner_id=user_id)
         ip_data = ip.dict()
@@ -103,7 +101,6 @@ def create_new_token(db, user_id: int, description: None):
     secret = secrets.token_hex(32)
     token = TokenCreate(key=key, secret=secret, owner_id=user_id, description=description)
     token_data = token.dict()
-    print(token_data)
     db_token = Token(description=token_data['description'], key=str(token_data['key']), secret=security.get_password_hash(token_data['secret']), owner_id=token_data['owner_id'])
     db.add(db_token)
     db.commit()

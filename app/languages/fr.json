@@ -20,7 +20,7 @@
     "consider-login-register": "Vous n'êtes pas authentifiés, veuillez vous connecter ou créer un compte",
     "Login": "Connexion",
     "Register": "Créer un compte",
-    "arg1": "Avec Mysafeip, vous limitez les attaques et les scans de ports sur votre infrastructure en autorisant dynamiquement les IPs qui doivent accéder à vos ressources",
+    "arg1": "Avec Mysafeip, vous limitez les attaques et les scans de ports sur votre infrastructure",
     "arg2": "Mysafeip offre une interface web et des APIs pour l'utiliser",
     "arg3": "Mysafeip est un logiciel opensource développé en Python sur la base du framework Fastapi",
     "Declare-trust-ip": "Ajouter une ip de confiance",
