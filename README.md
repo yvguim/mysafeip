@@ -1,6 +1,6 @@
 # MySafeIp
 
-Pour la version française, [c'est ici ](./README.md)
+Pour la version française, [c'est ici ](./README-FR.md)
 
 ## MySafeIp is a web app acting as a trusted IP source for firewalls.
 With it, I don't have to open my own services (Nextcloud, bitwarden, etc...) worldwilde. Just me, my family and friends can use those services easily. Family and friends don't even need an account to mysafeip with instant link feature.
