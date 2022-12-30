@@ -1,6 +1,6 @@
 # MySafeIp
 
-For english version, [it's here!](./README-EN.md)
+For english version, [it's here!](./README.md)
 
 ## MySaFeip est une application Web agissant comme un tiers de confiance pour les pare-feu.
 Avec cela, je n'ai pas à ouvrir mes propres services (NextCloud, Bitwarden, etc ...) au monde entier. Juste moi, ma famille et mes amis peuvent utiliser ces services facilement. La famille et les amis n'ont même pas besoin d'un compte grace aux liens instantanés. J'espère qu'il pourra vous rendre les mêmes services.
