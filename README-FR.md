@@ -5,14 +5,14 @@ For english version, [it's here!](./README.md)
 ## MySaFeip est une application Web agissant comme un tiers de confiance pour les pare-feu.
 Avec cela, je n'ai pas à ouvrir mes propres services (NextCloud, Bitwarden, etc ...) au monde entier. Juste moi, ma famille et mes amis peuvent utiliser ces services facilement. La famille et les amis n'ont même pas besoin d'un compte grace aux liens instantanés. J'espère qu'il pourra vous rendre les mêmes services.
 
-MySafeIP est livré avec un [Conteneur Docker] (https://github.com/yvguim/mysafeip-compose) et un [client] (https://github.com/yvguim/mysafeip-client) pour récupérer les IP de confiance.
+MySafeIP est livré avec un [Conteneur Docker](https://github.com/yvguim/mysafeip-compose) et un [client](https://github.com/yvguim/mysafeip-client) pour récupérer les IP de confiance.
 <p align="center">
   <img width="400" height="383" src="https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png">
 </p>
 
 ***Astuce***: L'utilisateur n'a pas besoin de connaître son IP publique, MySafeIP vérifiera directement les en-têtes HTTP.
 
-Il est basé sur le framework [Fastapi] (https://github.com/tiangolo/fastapi) et est disponible en anglais et en français.
+Il est basé sur le framework [Fastapi](https://github.com/tiangolo/fastapi) et est disponible en anglais et en français.
 
 Je considère MySAFEIP 0.9 comme une version alpha pour le moment (une meilleure organisation de code, de la refactorisation et des tests arrivent) mais cela fonctionne assez "out of the box".
 
