@@ -1,5 +1,5 @@
 """
-Main Mysafeip API pages
+Main MySafeIP API pages
 """
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
