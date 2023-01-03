@@ -11,9 +11,6 @@ import models
 import schemas
 from database import get_db
 #trans
-import glob
-import json
-import os.path
 import pyotp
 
 alert = {"success": "","danger": "","warning": ""}

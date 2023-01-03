@@ -19,11 +19,7 @@ from settings import settings
 from database import engine, get_db
 from routers import users, ips, instant_access
 #trans
-import glob
-import json
-import os.path
 import pyotp
-from typing import Union
 
 #Init database and tables if not exists
 models.Base.metadata.create_all(bind=engine)

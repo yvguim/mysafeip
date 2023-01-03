@@ -3,20 +3,15 @@ from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from fastapi import Depends, HTTPException, Request, Form
+from fastapi import Depends, Request, Form
 
 from auth import get_current_user, check_user, check_user_language
 import crud
 import models
 import schemas
 from database import get_db
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import RedirectResponse
-
+from fastapi import APIRouter, Depends
 from settings import settings
-import json
-import glob
-import os
 
 router = APIRouter(
     prefix="/instant-access",
