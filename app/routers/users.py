@@ -207,7 +207,7 @@ async def user_details(user_id: int,
 
     if twofactor and user.twofactor == "":
         crud.enable_user_twofactor(db, user)
-        twofactorurl = pyotp.totp.TOTP(user.twofactor).provisioning_uri(name=user.email,issuer_name='MySafeIp')
+        twofactorurl = pyotp.totp.TOTP(user.twofactor).provisioning_uri(name=user.email,issuer_name='MySafeIP')
 
     if not twofactor and user.twofactor != "":
         crud.disable_user_twofactor(db, user)

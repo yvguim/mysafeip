@@ -1,4 +1,4 @@
-# MySafeIp
+# MySafeIP
 
 For english version, [it's here!](./README.md)
 
@@ -22,7 +22,7 @@ Je considère MySAFEIP 0.9 comme une version alpha pour le moment (une meilleure
 
 ## C'est facile à installer (docker inside):
 - MySafeIP s'installe facilement avec docker: https://github.com/yvguim/mysafeip-compose
-- MySafeIp-client se configure aussi facilement: https://github.com/yvguim/mysafeip-client
+- MySafeIP-client se configure aussi facilement: https://github.com/yvguim/mysafeip-client
 
 ## Quelques copies d'écran:
 ### L'accueil

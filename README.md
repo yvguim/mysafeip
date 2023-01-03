@@ -1,8 +1,8 @@
-# MySafeIp
+# MySafeIP
 
 Pour la version française du Readme, [c'est ici!](./README-FR.md)
 
-## MySafeIp is a web app acting as a trusted IP source for firewalls.
+## MySafeIP is a web app acting as a trusted IP source for firewalls.
 With it, I don't have to open my own services (Nextcloud, bitwarden, etc...) worldwilde. Just me, my family and friends can use those services easily. Family and friends don't even need an account to mysafeip with instant link feature.
 
 It comes with a [docker container](https://github.com/yvguim/mysafeip-compose) and a [client](https://github.com/yvguim/mysafeip-client) to retrieve IP from server.
@@ -10,11 +10,11 @@ It comes with a [docker container](https://github.com/yvguim/mysafeip-compose) a
   <img width="400" height="383" src="https://raw.githubusercontent.com/yvguim/mysafeip/main/docs/diag.png">
 </p>
 
-***Tips***: User don't need to know his public IP, Mysafeip will check http headers directly. It also apply to instant links users.
+***Tips***: User don't need to know his public IP, MySafeIP will check http headers directly. It also apply to instant links users.
 
 It is built on top of [Fastapi](https://github.com/tiangolo/fastapi) framework and available in English and French.
 
-I consider MySafeIp 0.9 as an Alpha version for the moment (better code organisation, refactoring and tests are coming) but it works pretty well out of the box.
+I consider MySafeIP 0.9 as an Alpha version for the moment (better code organisation, refactoring and tests are coming) but it works pretty well out of the box.
 
 ## Users can:
 - Declare one or more IP;
@@ -23,7 +23,7 @@ I consider MySafeIp 0.9 as an Alpha version for the moment (better code organisa
 
 ## It's easy to install (docker inside):
 - MySafeIP can be easily installed with docker: https://github.com/yvguim/mysafeip-compose
-- MySafeIp-client can be configured easily too: https://github.com/yvguim/mysafeip-client
+- MySafeIP-client can be configured easily too: https://github.com/yvguim/mysafeip-client
 
 ## Some screenshots:
 ### Homepage
