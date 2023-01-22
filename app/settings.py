@@ -18,6 +18,6 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str = os.getenv('SQLALCHEMY_DATABASE_URI')
     URL_WEBSITE: str = os.getenv('URL_WEBSITE')
     DEFAULT_LANGUAGE: str = os.getenv('DEFAULT_LANGUAGE')
-    ADMIN_SEE_USERS_IP: str = os.getenv('ADMIN_SEE_USERS_IP')
+    ADMIN_SEE_USERS_IP: bool = os.getenv('ADMIN_SEE_USERS_IP')
 
 settings = Settings()
