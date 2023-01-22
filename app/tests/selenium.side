@@ -5,7 +5,7 @@
   "url": "http://127.0.0.1:9000/",
   "tests": [{
     "id": "553c5034-103a-49b8-a157-6cfd9be150ca",
-    "name": "test",
+    "name": "login add IP add instant link",
     "commands": [{
       "id": "b6cdb1c1-e567-42bc-8e00-45a8848e12f5",
       "comment": "",
@@ -376,7 +376,7 @@
       "id": "f6cd8b9f-2812-4def-a81b-52caff9058c1",
       "comment": "",
       "command": "click",
-      "target": "linkText=MySafeIp",
+      "target": "linkText=MySafeIP",
       "targets": [
         ["linkText=MySafeIp", "linkText"],
         ["css=.navbar-brand", "css:finder"],
@@ -657,6 +657,148 @@
       "value": ""
     }, {
       "id": "2a373a8e-096b-471b-8473-cabbe01814c9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-danger",
+      "targets": [
+        ["css=.btn-danger", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Déconnexion')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "a0c73b14-1fa3-4634-9753-cfdd66a5dc80",
+    "name": "Create selenium account",
+    "commands": [{
+      "id": "b5c96f19-5e78-4510-a57e-a6e406846dc0",
+      "comment": "",
+      "command": "open",
+      "target": "http://127.0.0.1:9000/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0482c900-d80e-444f-9a40-b9c678767004",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1280x1053",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e92cab26-2b2d-4886-8500-2f4746bec820",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Connexion",
+      "targets": [
+        ["linkText=Connexion", "linkText"],
+        ["css=.my-2:nth-child(1)", "css:finder"],
+        ["xpath=//a[contains(text(),'Connexion')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/signin')]", "xpath:href"],
+        ["xpath=//p[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Connexion')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "70a20a0c-6c2d-4a40-9a74-53a3c1944eaf",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=MySafeIP",
+      "targets": [
+        ["linkText=MySafeIP", "linkText"],
+        ["css=.navbar-brand", "css:finder"],
+        ["xpath=//a[contains(@href, '/')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,' MySafeIP')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "04ccd05f-1f6e-42e3-974f-1080b2884d06",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Créer un compte",
+      "targets": [
+        ["linkText=Créer un compte", "linkText"],
+        ["css=.btn:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Créer un compte')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"],
+        ["xpath=//a[contains(.,'Créer un compte')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "7d3f5f02-b5d3-4ab6-902f-c070ab125d54",
+      "comment": "",
+      "command": "type",
+      "target": "id=inputEmail",
+      "targets": [
+        ["id=inputEmail", "id"],
+        ["name=email", "name"],
+        ["css=#inputEmail", "css:finder"],
+        ["xpath=//input[@id='inputEmail']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "selenium@mysafeip.com"
+    }, {
+      "id": "7ba8a85f-f47e-4751-b9f9-c406c0effab1",
+      "comment": "",
+      "command": "click",
+      "target": "id=inputPassword",
+      "targets": [
+        ["id=inputPassword", "id"],
+        ["name=password", "name"],
+        ["xpath=//input[@id='inputPassword']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a9012ac4-d497-4ce4-aca7-1be5700f4bac",
+      "comment": "",
+      "command": "type",
+      "target": "id=inputPassword",
+      "targets": [
+        ["id=inputPassword", "id"],
+        ["name=password", "name"],
+        ["xpath=//input[@id='inputPassword']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": "JustFortest!123"
+    }, {
+      "id": "fd9cc5cb-062b-449e-a29d-1e56a7de9f17",
+      "comment": "",
+      "command": "click",
+      "target": "name=confirm_password",
+      "targets": [
+        ["name=confirm_password", "name"],
+        ["xpath=(//input[@id='inputPassword'])[2]", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7aaf5893-431f-458b-8b99-9eb65589ee2f",
+      "comment": "",
+      "command": "type",
+      "target": "name=confirm_password",
+      "targets": [
+        ["name=confirm_password", "name"],
+        ["xpath=(//input[@id='inputPassword'])[2]", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": "JustFortest!123"
+    }, {
+      "id": "03d329a9-aad5-48cf-97f0-9c46b483d8db",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-m",
+      "targets": [
+        ["css=.btn-m", "css:finder"],
+        ["xpath=(//button[@type='submit'])[2]", "xpath:attributes"],
+        ["xpath=//div/form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Créer un compte')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a1287363-5bc3-4d42-9008-1c1f7c56e812",
       "comment": "",
       "command": "click",
       "target": "css=.btn-danger",
