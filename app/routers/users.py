@@ -4,13 +4,11 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, Request, Form, APIRouter, Depends
 from fastapi.responses import RedirectResponse
-
 from auth import get_current_user, check_user_language, password_validity
 import crud
 import models
 import schemas
 from database import get_db
-#trans
 import pyotp
 
 alert = {"success": "","danger": "","warning": ""}
