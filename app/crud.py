@@ -4,6 +4,7 @@ import security
 from schemas import UserCreate, IpCreate, InstantAccessCreate, TokenCreate
 from models import User, Ip, InstantAccess, Token
 import pyotp
+from settings import settings
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -55,7 +56,7 @@ def delete_user(db: Session, email):
     return True
 
 def get_ips(db: Session, user):
-    if user.is_admin:
+    if user.is_admin and settings.ADMIN_SEE_USERS_IP:
         return db.query(Ip).all()
     else:
         return db.query(Ip).filter(Ip.owner == user)
