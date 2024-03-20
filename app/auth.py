@@ -61,7 +61,7 @@ def password_validity(password: str):
         return False
     elif not re.search("[0-9]" , password):
         return False
-    elif not re.search("[ !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]" , password):
+    elif not re.search("[ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]" , password):
         return False
     return True
     

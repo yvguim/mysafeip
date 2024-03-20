@@ -11,3 +11,4 @@ jinja2
 requests
 python-dotenv
 pyotp
+pydantic-settings

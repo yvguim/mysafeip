@@ -9,7 +9,7 @@ class InstantAccess(BaseModel):
     unique_link: str = None
     description: Union[str, None] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class InstantAccessCreate(InstantAccess):
     pass
@@ -21,7 +21,7 @@ class Ip(BaseModel):
     description: Union[str, None] = None
     origin: str = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class IpCreate(Ip):
     pass
@@ -34,7 +34,7 @@ class User(BaseModel):
     is_admin: Optional[bool] = False
     twofactor: str = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserCreate(User):
     password: str
@@ -49,7 +49,7 @@ class Token(BaseModel):
     secret: str = None
     description: Union[str, None] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TokenCreate(Token):
     pass
