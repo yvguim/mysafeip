@@ -1,7 +1,6 @@
 import multiprocessing
 import os
 
-from distutils.util import strtobool
 
 forwarded_allow_ips='*'
 bind = os.getenv('WEB_BIND', '0.0.0.0:80')
